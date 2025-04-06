@@ -141,7 +141,19 @@
 </head>
 <body>
     <canvas class="matrix-rain" id="matrix"></canvas>
-    <div class="container">
+    <div id="security-banner" class="security-banner">
+        <div class="banner-content">
+            <h2>🔐 Security Assurance</h2>
+            <div class="security-points">
+                <p>✓ Your GitHub authentication token is securely encrypted</p>
+                <p>✓ Data is stored in an encrypted format in our database</p>
+                <p>✓ All data is automatically deleted upon URL expiration</p>
+                <p>✓ Industry-standard encryption protocols</p>
+            </div>
+            <button onclick="hideBanner()" class="ok-button">I Understand</button>
+        </div>
+    </div>
+    <div class="container" style="display: none">
         <h1>Share Private GitHub Repository</h1>
         <form method="POST">
             <input type="text" name="token" placeholder="GitHub Personal Access Token" required>
@@ -207,6 +219,85 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         });
+    </script>
+    <style>
+        .security-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(8,12,20,0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+        }
+        .banner-content {
+            background: rgba(14,224,224,0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid var(--primary);
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+            box-shadow: 0 0 30px rgba(14,224,224,0.2);
+        }
+        .banner-content h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+        .security-points {
+            text-align: left;
+            margin: 1.5rem 0;
+        }
+        .security-points p {
+            margin: 1rem 0;
+            color: var(--primary);
+            font-size: 1.1rem;
+            opacity: 0;
+            animation: slideIn 0.5s ease-out forwards;
+        }
+        .security-points p:nth-child(1) { animation-delay: 0.2s; }
+        .security-points p:nth-child(2) { animation-delay: 0.4s; }
+        .security-points p:nth-child(3) { animation-delay: 0.6s; }
+        .security-points p:nth-child(4) { animation-delay: 0.8s; }
+        .ok-button {
+            background: var(--primary);
+            color: var(--bg);
+            padding: 1rem 3rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 1rem;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out 1s forwards;
+        }
+        .ok-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(14,224,224,0.3);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+    <script>
+        function hideBanner() {
+            document.getElementById('security-banner').style.display = 'none';
+            document.querySelector('.container').style.display = 'block';
+        }
     </script>
 </body>
 </html>
