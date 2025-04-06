@@ -1,0 +1,24 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Share GitHub Repo</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        input, select, button { margin: 10px 0; padding: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Share Private GitHub Repository</h1>
+    <form method="POST">
+        <input type="text" name="token" placeholder="GitHub Personal Access Token" required><br>
+        <input type="text" name="repo_url" placeholder="Repository URL (e.g., https://github.com/owner/repo)" required><br>
+        <select name="expiry_days">
+            <option value="1">1 Day</option>
+            <option value="7">7 Days</option>
+            <option value="30">30 Days</option>
+        </select><br>
+        <button type="submit">Generate Share Link</button>
+    </form>
+</body>
+</html>

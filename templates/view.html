@@ -1,0 +1,24 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ owner }}/{{ repo }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .file-list { list-style: none; padding: 0; }
+        .file-list li { margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <h1>{{ owner }}/{{ repo }}</h1>
+    <h2>README</h2>
+    <div>{{ readme_content | safe }}</div>
+    <h2>Files</h2>
+    <ul class="file-list">
+        {% for file in files %}
+            <li>{{ file.name }} ({{ file.type }})</li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('download_repo', share_id=share_id) }}">Download ZIP</a>
+</body>
+</html>
