@@ -116,10 +116,17 @@ def view_repo(share_id):
     repo_data = repo_data[0]
     if repo_data.get('is_protected'):
         if request.method == 'POST':
-            stored_password = cipher.decrypt(repo_data.get('password').encode()).decode()
-            if request.form.get('password') == stored_password:
-                return render_repo_content(repo_data)
-            else:
+            try:
+                entered_password = request.form.get('password', '')
+                stored_encrypted_password = repo_data.get('password')
+                decrypted_password = cipher.decrypt(stored_encrypted_password.encode()).decode()
+                
+                if entered_password == decrypted_password:
+                    return render_repo_content(repo_data)
+                else:
+                    return render_template('password.html', share_id=share_id, error=True)
+            except Exception as e:
+                print("Decryption error:", e)
                 return render_template('password.html', share_id=share_id, error=True)
         return render_template('password.html', share_id=share_id)
     return render_repo_content(repo_data)
