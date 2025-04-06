@@ -3,7 +3,9 @@
 <html>
 <head>
     <title>Share GitHub Repo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        * { box-sizing: border-box; }
         body { 
             font-family: 'Courier New', monospace;
             background-color: #0a0a0a;
@@ -12,16 +14,32 @@
             padding: 20px;
             min-height: 100vh;
             position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
+        }
+        @keyframes matrix {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 0% 100%; }
         }
         .container {
             max-width: 800px;
-            margin: 0 auto;
-            background: rgba(0,20,0,0.7);
-            padding: 30px;
+            width: 90%;
+            margin: 20px auto;
+            background: rgba(0,20,0,0.9);
+            padding: clamp(15px, 5vw, 30px);
             border: 1px solid #00ff00;
             box-shadow: 0 0 20px rgba(0,255,0,0.2);
-            animation: glow 2s infinite alternate;
+            animation: glow 2s infinite alternate, slideIn 0.5s ease-out;
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            h1 { font-size: 1.5em; }
+            input, select, button { font-size: 14px; }
         }
         h1 {
             text-align: center;
