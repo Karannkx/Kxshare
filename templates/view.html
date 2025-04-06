@@ -11,16 +11,17 @@
             --secondary: #ff2975;
             --accent: #7928ff;
             --bg: #080c14;
-            --neon-glow: 0 0 10px var(--primary), 0 0 20px var(--primary), 0 0 30px var(--primary);
+            --text: #e0e0e0;
         }
         body { 
-            font-family: 'Courier New', monospace;
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
             background-color: var(--bg);
-            color: var(--primary);
+            color: var(--text);
             margin: 0;
             padding: 20px;
             min-height: 100vh;
             overflow-x: hidden;
+            line-height: 1.6;
         }
         .matrix-rain {
             position: fixed;
@@ -30,120 +31,125 @@
             height: 100%;
             pointer-events: none;
             z-index: -1;
+            opacity: 0.5;
         }
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 0 auto;
-            background: rgba(0,20,0,0.95);
-            padding: 30px;
-            border: 1px solid #00ff00;
+            background: rgba(8,12,20,0.95);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(14,224,224,0.2);
+            box-shadow: 0 0 30px rgba(14,224,224,0.1);
             animation: fadeIn 0.5s ease-out;
         }
         h1, h2 { 
-            letter-spacing: 2px;
-            border-bottom: 1px solid var(--primary);
-            padding-bottom: 10px;
-            margin: 20px 0;
+            font-weight: 600;
+            letter-spacing: -0.5px;
             color: var(--primary);
+            padding-bottom: 1rem;
+            margin: 1.5rem 0;
+            border-bottom: 1px solid rgba(14,224,224,0.2);
+        }
+        h1 {
+            font-size: 2rem;
+            word-break: break-word;
+        }
+        .readme-content {
+            background: rgba(8,12,20,0.6);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
         }
         .file-tree {
-            padding: 15px;
-            border-radius: 10px;
-            background: rgba(8,12,20,0.8);
-            border: 1px solid var(--primary);
-            margin: 20px 0;
+            background: rgba(8,12,20,0.6);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
         }
         .file-tree ul {
             list-style: none;
-            padding-left: 20px;
+            padding-left: 1.5rem;
         }
         .file-tree > ul {
             padding-left: 0;
         }
         .file-item {
-            margin: 8px 0;
-            padding: 10px;
-            border-radius: 5px;
-            background: rgba(14,224,224,0.1);
-            border: 1px solid rgba(14,224,224,0.3);
-            transition: all 0.3s ease;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border-radius: 6px;
+            background: rgba(14,224,224,0.05);
+            border: 1px solid rgba(14,224,224,0.1);
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            gap: 10px;
-            cursor: pointer;
+            gap: 0.75rem;
         }
         .file-item:hover {
-            background: rgba(14,224,224,0.2);
-            transform: translateX(5px);
-            border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(14,224,224,0.2);
+            background: rgba(14,224,224,0.1);
+            transform: translateX(4px);
+            border-color: rgba(14,224,224,0.3);
         }
-        .file-item i {
+        .file-icon {
             color: var(--primary);
-            font-style: normal;
+            font-size: 1.2rem;
+        }
+        .file-name {
+            flex: 1;
+            font-size: 0.95rem;
+            word-break: break-word;
         }
         .file-type {
-            font-size: 0.8em;
-            padding: 2px 8px;
+            font-size: 0.8rem;
+            padding: 0.25rem 0.75rem;
             border-radius: 12px;
-            background: rgba(14,224,224,0.2);
+            background: rgba(14,224,224,0.1);
             color: var(--primary);
-            margin-left: auto;
         }
-        .folder > .file-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
-            transition: 0.5s;
-        }
-        .file-list li:hover::before {
-            left: 100%;
-        }
-        a {
-            color: #00ff00;
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
             text-decoration: none;
-            padding: 10px 20px;
-            border: 1px solid #00ff00;
-            display: inline-block;
-            margin-top: 20px;
-            transition: all 0.3s;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            border: 1px solid rgba(14,224,224,0.3);
+            background: rgba(14,224,224,0.05);
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
         }
-        a:hover {
-            background: #003000;
-            box-shadow: 0 0 10px #00ff00;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .download-btn:hover {
+            background: rgba(14,224,224,0.1);
+            border-color: var(--primary);
         }
         @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
             .container {
-                width: 95%;
-                padding: 15px;
-                margin: 10px;
+                padding: 1rem;
+            }
+            h1 {
+                font-size: 1.5rem;
             }
             .file-tree {
-                padding: 10px;
+                padding: 1rem;
             }
             .file-item {
-                padding: 8px;
-                font-size: 0.9em;
-            }
-            h1, h2 {
-                font-size: 1.5em;
+                padding: 0.5rem;
+                font-size: 0.9rem;
             }
         }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(14,224,224,0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(14,224,224,0); }
-            100% { box-shadow: 0 0 0 0 rgba(14,224,224,0); }
-        }
-        .file-item:active {
-            animation: pulse 0.3s ease-out;
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(10px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
         }
     </style>
 </head>
@@ -151,15 +157,15 @@
     <div class="container">
         <h1>{{ owner }}/{{ repo }}</h1>
         <h2>README</h2>
-        <div>{{ readme_content | safe }}</div>
+        <div class="readme-content">{{ readme_content | safe }}</div>
         <h2>Repository Structure</h2>
         <div class="file-tree">
             <ul>
                 {% for file in files %}
-                    <li class="{{ file.type }}">
+                    <li>
                         <div class="file-item">
-                            <i>{{ '📁' if file.type == 'dir' else '📄' }}</i>
-                            <span>{{ file.name }}</span>
+                            <span class="file-icon">{{ '📁' if file.type == 'dir' else '📄' }}</span>
+                            <span class="file-name">{{ file.name }}</span>
                             <span class="file-type">{{ file.type }}</span>
                         </div>
                         {% if file.type == 'dir' %}
@@ -169,9 +175,11 @@
                 {% endfor %}
             </ul>
         </div>
-        <a href="{{ url_for('download_repo', share_id=share_id) }}">Download ZIP</a>
+        <a href="{{ url_for('download_repo', share_id=share_id) }}" class="download-btn">
+            <span>⬇️</span> Download ZIP
+        </a>
     </div>
-<canvas class="matrix-rain" id="matrix"></canvas>
+    <canvas class="matrix-rain" id="matrix"></canvas>
     <script>
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
