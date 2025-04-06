@@ -60,6 +60,9 @@ def home():
         # Generate unique share ID
         share_id = str(uuid.uuid4())
 
+        # Get optional password
+        protection_password = request.form.get('protection_password', '')
+        
         # Store in database
         db.insert({
             'share_id': share_id,
@@ -67,7 +70,9 @@ def home():
             'owner': owner,
             'repo': repo,
             'created_at': datetime.now().isoformat(),
-            'expiry': (datetime.now() + timedelta(days=expiry_days)).isoformat()
+            'expiry': (datetime.now() + timedelta(days=expiry_days)).isoformat(),
+            'is_protected': bool(protection_password),
+            'password': protection_password if protection_password else None
         })
 
         share_link = url_for('view_repo', share_id=share_id, _external=True)

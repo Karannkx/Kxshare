@@ -34,8 +34,12 @@
             position: relative;
             max-width: 800px;
             width: 90%;
-            margin: 40px auto;
+            margin: 0 auto;
             background: rgba(8,12,20,0.8);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             padding: 30px;
             border-radius: 15px;
             border: 2px solid rgba(14,224,224,0.3);
@@ -162,7 +166,28 @@
                 <option value="7">7 Days</option>
                 <option value="30">30 Days</option>
             </select>
+            <div class="password-protection">
+                <input type="password" name="protection_password" placeholder="Password Protection (Optional)" class="optional-field">
+                <div class="hint">Leave empty for no password protection</div>
+            </div>
             <button type="submit">Generate Share Link</button>
+            <style>
+                .password-protection {
+                    position: relative;
+                    margin: 10px 0;
+                }
+                .hint {
+                    font-size: 0.8em;
+                    color: rgba(14,224,224,0.6);
+                    margin-top: 5px;
+                }
+                .optional-field {
+                    opacity: 0.8;
+                }
+                .optional-field:focus {
+                    opacity: 1;
+                }
+            </style>
         </form>
     </div>
     <style>
