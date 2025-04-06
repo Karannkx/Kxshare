@@ -118,11 +118,12 @@ def view_repo(share_id):
             entered_password = request.form.get('password', '')
             stored_password = repo_data.get('password')
             
-            print(f"Entered: {entered_password}, Stored: {stored_password}")
-            
             if entered_password and entered_password == stored_password:
+                print("Password matched!")
                 return render_repo_content(repo_data)
-            return render_template('password.html', share_id=share_id, error=True)
+            else:
+                print("Password mismatch!")
+                return render_template('password.html', share_id=share_id, error=True)
         return render_template('password.html', share_id=share_id)
     return render_repo_content(repo_data)
 
