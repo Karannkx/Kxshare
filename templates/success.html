@@ -6,10 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --primary: #00ff99;
+            --secondary: #ff00ff;
+            --accent: #00ffff;
+            --bg: #0a0a0a;
+        }
         body { 
             font-family: 'Courier New', monospace;
-            background-color: #0a0a0a;
-            color: #00ff00;
+            background-color: var(--bg);
+            color: var(--primary);
             min-height: 100vh;
             display: flex;
             align-items: center;
