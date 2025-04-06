@@ -99,10 +99,128 @@
     <div class="container">
         <h1>Link Ready!</h1>
         <div class="share-link">
-            Your share link: <a href="{{ share_link }}">{{ share_link }}</a>
+            <div class="link-container">
+                <input type="text" id="shareLink" value="{{ share_link }}" readonly>
+                <button onclick="copyToClipboard()" class="copy-btn">Copy</button>
+            </div>
+            <div class="qr-code">
+                <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code">
+            </div>
+            <div class="social-share">
+                <button onclick="share('twitter')" class="share-btn twitter">Twitter</button>
+                <button onclick="share('linkedin')" class="share-btn linkedin">LinkedIn</button>
+                <button onclick="share('whatsapp')" class="share-btn whatsapp">WhatsApp</button>
+            </div>
+            <div id="countdown" class="countdown"></div>
         </div>
-        <p>Copy this link and share it with others. It will expire as per your selected time.</p>
+        <p>Share this link with others. Time remaining until expiry shown above.</p>
     </div>
+    <script>
+        function copyToClipboard() {
+            const copyText = document.getElementById("shareLink");
+            copyText.select();
+            document.execCommand("copy");
+            alert("Link copied!");
+        }
+        
+        function share(platform) {
+            const url = encodeURIComponent(document.getElementById("shareLink").value);
+            const text = "Check out this GitHub repository!";
+            let shareUrl = '';
+            
+            switch(platform) {
+                case 'twitter':
+                    shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+                    break;
+                case 'linkedin':
+                    shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+                    break;
+                case 'whatsapp':
+                    shareUrl = `https://wa.me/?text=${text} ${url}`;
+                    break;
+            }
+            window.open(shareUrl, '_blank');
+        }
+
+        // Countdown timer
+        const expiryDate = new Date("{{ expiry_date }}").getTime();
+        
+        const countdown = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = expiryDate - now;
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            document.getElementById("countdown").innerHTML = `Expires in: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+            
+            if (distance < 0) {
+                clearInterval(countdown);
+                document.getElementById("countdown").innerHTML = "EXPIRED";
+            }
+        }, 1000);
+    </script>
+    <style>
+        .link-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .link-container input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid var(--primary);
+            background: rgba(8,12,20,0.8);
+            color: var(--primary);
+        }
+        .copy-btn {
+            padding: 10px 20px;
+            background: var(--primary);
+            color: var(--bg);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .qr-code {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .qr-code img {
+            max-width: 200px;
+            border: 10px solid white;
+            border-radius: 10px;
+        }
+        .social-share {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .share-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+        .share-btn:hover {
+            transform: translateY(-2px);
+        }
+        .twitter { background: #1DA1F2; }
+        .linkedin { background: #0077B5; }
+        .whatsapp { background: #25D366; }
+        .countdown {
+            text-align: center;
+            font-size: 1.2em;
+            margin: 20px 0;
+            color: var(--secondary);
+            text-shadow: 0 0 10px var(--secondary);
+        }
+    </style>
     <script>
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');

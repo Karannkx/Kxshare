@@ -3,6 +3,9 @@ import base64
 import uuid
 from datetime import datetime, timedelta
 from flask import Flask, render_template, request, redirect, url_for, send_file, abort
+import qrcode
+import base64
+from io import BytesIO
 from tinydb import TinyDB, Query
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
@@ -68,7 +71,25 @@ def home():
         })
 
         share_link = url_for('view_repo', share_id=share_id, _external=True)
-        return render_template('success.html', share_link=share_link)
+        
+        # Generate QR code
+        qr = qrcode.QRCode(version=1, box_size=10, border=5)
+        qr.add_data(share_link)
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="black", back_color="white")
+        
+        # Convert QR code to base64
+        buffered = BytesIO()
+        img.save(buffered, format="PNG")
+        qr_code = base64.b64encode(buffered.getvalue()).decode()
+        
+        # Get expiry date
+        expiry_date = (datetime.now() + timedelta(days=int(expiry_days))).strftime('%Y-%m-%dT%H:%M:%S')
+        
+        return render_template('success.html', 
+                             share_link=share_link, 
+                             qr_code=qr_code,
+                             expiry_date=expiry_date)
 
     return render_template('home.html')
 
