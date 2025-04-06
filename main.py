@@ -2,7 +2,8 @@ import os
 import base64
 import uuid
 from datetime import datetime, timedelta
-from flask import Flask, render_template, request, redirect, url_for, send_file, abort
+from flask import Flask, render_template, request, redirect, url_for, send_file, abort, make_response
+from flask_caching import Cache
 import qrcode
 import base64
 from io import BytesIO
@@ -18,6 +19,7 @@ import zipfile
 
 # Initialize Flask app
 app = Flask(__name__)
+cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
 # Load environment variables
 load_dotenv()
@@ -101,6 +103,7 @@ def home():
 
 # View repository route
 @app.route('/view/<share_id>', methods=['GET', 'POST'])
+@cache.memoize(timeout=300)  # Cache for 5 minutes
 def view_repo(share_id):
     q = Query()
     repo_data = db.search(q.share_id == share_id)
@@ -152,12 +155,14 @@ def render_repo_content(repo_data):
     if contents_resp.status_code == 200:
         files = contents_resp.json()
 
-    return render_template('view.html', 
+    response = make_response(render_template('view.html', 
                          readme_content=readme_content,
                          files=files,
                          owner=owner,
                          repo=repo,
-                         share_id=repo_data['share_id'])
+                         share_id=repo_data['share_id']))
+    response.headers['Cache-Control'] = 'public, max-age=300'
+    return response
 
 # Download ZIP route
 @app.route('/download/<share_id>')
