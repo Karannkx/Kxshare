@@ -115,15 +115,16 @@ def view_repo(share_id):
     repo_data = repo_data[0]
     if repo_data.get('is_protected'):
         if request.method == 'POST':
-            entered_password = request.form.get('password', '')
+            entered_password = request.form.get('password')
             stored_password = repo_data.get('password')
             
-            if entered_password and entered_password == stored_password:
+            print(f"Debug - Entered: '{entered_password}', Stored: '{stored_password}'")
+            
+            if entered_password == stored_password:
                 print("Password matched!")
                 return render_repo_content(repo_data)
-            else:
-                print("Password mismatch!")
-                return render_template('password.html', share_id=share_id, error=True)
+            print("Password mismatch!")
+            return render_template('password.html', share_id=share_id, error=True)
         return render_template('password.html', share_id=share_id)
     return render_repo_content(repo_data)
 
