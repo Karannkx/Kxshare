@@ -99,20 +99,32 @@ def home():
     return render_template('home.html')
 
 # View repository route
-@app.route('/view/<share_id>')
+@app.route('/view/<share_id>', methods=['GET', 'POST'])
 def view_repo(share_id):
     q = Query()
     repo_data = db.search(q.share_id == share_id)
 
     if not repo_data:
         abort(404)
-
+        
     repo_data = repo_data[0]
+    if repo_data.get('is_protected'):
+        if request.method == 'POST':
+            if request.form.get('password') == repo_data.get('password'):
+                return render_repo_content(repo_data)
+            else:
+                return render_template('password.html', share_id=share_id, error=True)
+        return render_template('password.html', share_id=share_id)
+    return render_repo_content(repo_data)
+
+def render_repo_content(repo_data):
+
+    def render_repo_content(repo_data):
     expiry = datetime.fromisoformat(repo_data['expiry'])
 
     if datetime.now() > expiry:
         # Delete expired entry
-        db.remove(q.share_id == share_id)
+        db.remove(Query().share_id == repo_data['share_id'])
         return render_template('expired.html')
 
     # Decrypt token
@@ -145,7 +157,7 @@ def view_repo(share_id):
                          files=files,
                          owner=owner,
                          repo=repo,
-                         share_id=share_id)
+                         share_id=repo_data['share_id'])
 
 # Download ZIP route
 @app.route('/download/<share_id>')
