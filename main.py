@@ -118,8 +118,6 @@ def view_repo(share_id):
     return render_repo_content(repo_data)
 
 def render_repo_content(repo_data):
-
-    def render_repo_content(repo_data):
     expiry = datetime.fromisoformat(repo_data['expiry'])
 
     if datetime.now() > expiry:
