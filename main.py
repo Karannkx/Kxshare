@@ -64,9 +64,8 @@ def home():
 
         # Get optional password
         protection_password = request.form.get('protection_password', '')
-        
+
         # Store in database with encrypted password
-        encrypted_password = cipher.encrypt(protection_password.encode()).decode() if protection_password else None
         db.insert({
             'share_id': share_id,
             'encrypted_token': encrypted_token.decode(),
@@ -75,25 +74,25 @@ def home():
             'created_at': datetime.now().isoformat(),
             'expiry': (datetime.now() + timedelta(days=expiry_days)).isoformat(),
             'is_protected': bool(protection_password),
-            'password': encrypted_password
+            'password': protection_password
         })
 
         share_link = url_for('view_repo', share_id=share_id, _external=True)
-        
+
         # Generate QR code
         qr = qrcode.QRCode(version=1, box_size=10, border=5)
         qr.add_data(share_link)
         qr.make(fit=True)
         img = qr.make_image(fill_color="black", back_color="white")
-        
+
         # Convert QR code to base64
         buffered = BytesIO()
         img.save(buffered, format="PNG")
         qr_code = base64.b64encode(buffered.getvalue()).decode()
-        
+
         # Get expiry date
         expiry_date = (datetime.now() + timedelta(days=int(expiry_days))).strftime('%Y-%m-%dT%H:%M:%S')
-        
+
         return render_template('success.html', 
                              share_link=share_link, 
                              qr_code=qr_code,
@@ -112,16 +111,15 @@ def view_repo(share_id):
 
     if not repo_data:
         abort(404)
-        
+
     repo_data = repo_data[0]
     if repo_data.get('is_protected'):
         if request.method == 'POST':
             try:
                 entered_password = request.form.get('password', '')
-                stored_encrypted_password = repo_data.get('password')
-                decrypted_password = cipher.decrypt(stored_encrypted_password.encode()).decode()
-                
-                if entered_password == decrypted_password:
+                stored_password = repo_data.get('password')
+
+                if entered_password == stored_password:
                     print("Password matched!")
                     return render_repo_content(repo_data)
                 print("Password mismatch!")
