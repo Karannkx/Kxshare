@@ -69,7 +69,7 @@
             transform: translateX(-50%);
             width: 60%;
             height: 2px;
-            background: linear-gradient(90deg, transparent, #00ff00, transparent);
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
         }
         input, select {
             width: 100%;
@@ -102,13 +102,13 @@
             width: 100%;
             padding: 15px;
             margin-top: 20px;
-            background: linear-gradient(45deg, #001833, #003066);
+            background: linear-gradient(45deg, rgba(8,12,20,0.8), rgba(14,224,224,0.2));
             position: relative;
             z-index: 1;
             overflow: hidden;
             transition: all 0.5s;
-            border: 1px solid #00ff00;
-            color: #00ff00;
+            border: 2px solid var(--primary);
+            color: var(--primary);
             font-family: 'Courier New', monospace;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -204,7 +204,7 @@
         function draw() {
             ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#0F0';
+            ctx.fillStyle = '#0fe0e0';
             ctx.font = fontSize + 'px monospace';
             for(let i = 0; i < drops.length; i++) {
                 const text = characters.charAt(Math.floor(Math.random() * characters.length));
