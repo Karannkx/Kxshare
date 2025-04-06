@@ -1,10 +1,48 @@
 
 <!DOCTYPE html>
 <html>
-<head><title>Link Generated</title></head>
+<head>
+    <title>Link Generated</title>
+    <style>
+        body { 
+            font-family: 'Courier New', monospace;
+            background-color: #0a0a0a;
+            color: #00ff00;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(0,20,0,0.7);
+            padding: 30px;
+            border: 1px solid #00ff00;
+            animation: slideIn 0.5s ease-out;
+        }
+        h1 { text-align: center; letter-spacing: 2px; }
+        a { color: #00ff00; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .share-link {
+            padding: 15px;
+            background: #001400;
+            border: 1px solid #00ff00;
+            margin: 20px 0;
+            word-break: break-all;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
 <body>
-    <h1>Share Link Generated</h1>
-    <p>Your share link: <a href="{{ share_link }}">{{ share_link }}</a></p>
-    <p>Copy this link and share it with others. It will expire as per your selected time.</p>
+    <div class="container">
+        <h1>Share Link Generated</h1>
+        <div class="share-link">
+            Your share link: <a href="{{ share_link }}">{{ share_link }}</a>
+        </div>
+        <p>Copy this link and share it with others. It will expire as per your selected time.</p>
+    </div>
 </body>
 </html>

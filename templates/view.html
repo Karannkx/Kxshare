@@ -4,21 +4,72 @@
 <head>
     <title>{{ owner }}/{{ repo }}</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-        .file-list { list-style: none; padding: 0; }
-        .file-list li { margin: 5px 0; }
+        body { 
+            font-family: 'Courier New', monospace;
+            background-color: #0a0a0a;
+            color: #00ff00;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(0,20,0,0.7);
+            padding: 30px;
+            border: 1px solid #00ff00;
+            animation: fadeIn 0.5s ease-out;
+        }
+        h1, h2 { 
+            letter-spacing: 2px;
+            border-bottom: 1px solid #00ff00;
+            padding-bottom: 10px;
+        }
+        .file-list {
+            list-style: none;
+            padding: 0;
+        }
+        .file-list li {
+            margin: 5px 0;
+            padding: 8px;
+            border: 1px solid #003000;
+            background: #001400;
+            transition: all 0.3s;
+        }
+        .file-list li:hover {
+            background: #002000;
+            transform: translateX(5px);
+        }
+        a {
+            color: #00ff00;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid #00ff00;
+            display: inline-block;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        a:hover {
+            background: #003000;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     </style>
 </head>
 <body>
-    <h1>{{ owner }}/{{ repo }}</h1>
-    <h2>README</h2>
-    <div>{{ readme_content | safe }}</div>
-    <h2>Files</h2>
-    <ul class="file-list">
-        {% for file in files %}
-            <li>{{ file.name }} ({{ file.type }})</li>
-        {% endfor %}
-    </ul>
-    <a href="{{ url_for('download_repo', share_id=share_id) }}">Download ZIP</a>
+    <div class="container">
+        <h1>{{ owner }}/{{ repo }}</h1>
+        <h2>README</h2>
+        <div>{{ readme_content | safe }}</div>
+        <h2>Files</h2>
+        <ul class="file-list">
+            {% for file in files %}
+                <li>{{ file.name }} ({{ file.type }})</li>
+            {% endfor %}
+        </ul>
+        <a href="{{ url_for('download_repo', share_id=share_id) }}">Download ZIP</a>
+    </div>
 </body>
 </html>

@@ -1,9 +1,38 @@
 
 <!DOCTYPE html>
 <html>
-<head><title>Expired</title></head>
+<head>
+    <title>Expired</title>
+    <style>
+        body { 
+            font-family: 'Courier New', monospace;
+            background-color: #0a0a0a;
+            color: #ff0000;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            text-align: center;
+            background: rgba(20,0,0,0.7);
+            padding: 30px;
+            border: 1px solid #ff0000;
+            animation: errorGlow 2s infinite alternate;
+        }
+        h1 { letter-spacing: 2px; }
+        @keyframes errorGlow {
+            from { box-shadow: 0 0 10px rgba(255,0,0,0.2); }
+            to { box-shadow: 0 0 20px rgba(255,0,0,0.4); }
+        }
+    </style>
+</head>
 <body>
-    <h1>Link Expired</h1>
-    <p>This share link has expired.</p>
+    <div class="container">
+        <h1>Link Expired</h1>
+        <p>This share link has expired.</p>
+    </div>
 </body>
 </html>
