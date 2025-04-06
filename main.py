@@ -63,7 +63,8 @@ def home():
         # Get optional password
         protection_password = request.form.get('protection_password', '')
         
-        # Store in database
+        # Store in database with encrypted password
+        encrypted_password = cipher.encrypt(protection_password.encode()).decode() if protection_password else None
         db.insert({
             'share_id': share_id,
             'encrypted_token': encrypted_token.decode(),
@@ -72,7 +73,7 @@ def home():
             'created_at': datetime.now().isoformat(),
             'expiry': (datetime.now() + timedelta(days=expiry_days)).isoformat(),
             'is_protected': bool(protection_password),
-            'password': protection_password if protection_password else None
+            'password': encrypted_password
         })
 
         share_link = url_for('view_repo', share_id=share_id, _external=True)
@@ -110,7 +111,8 @@ def view_repo(share_id):
     repo_data = repo_data[0]
     if repo_data.get('is_protected'):
         if request.method == 'POST':
-            if request.form.get('password') == repo_data.get('password'):
+            stored_password = cipher.decrypt(repo_data.get('password').encode()).decode()
+            if request.form.get('password') == stored_password:
                 return render_repo_content(repo_data)
             else:
                 return render_template('password.html', share_id=share_id, error=True)
