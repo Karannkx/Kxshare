@@ -33,15 +33,15 @@
             z-index: 1;
         }
         .container {
-            width: 90%;
-            max-width: 800px;
-            background: rgba(8,12,20,0.8);
-            padding: 30px;
+            width: min(90%, 800px);
+            background: rgba(8,12,20,0.95);
+            padding: clamp(15px, 4vw, 30px);
             border-radius: 15px;
             border: 2px solid rgba(14,224,224,0.3);
             box-shadow: 0 0 30px rgba(14,224,224,0.1);
-            animation: slideIn 0.5s ease-out, float 4s ease-in-out infinite;
-            backdrop-filter: blur(12px);
+            animation: slideIn 0.3s ease-out, float 4s ease-in-out infinite;
+            will-change: transform;
+            contain: layout style paint;
             z-index: 2;
         }
         .container:hover {
@@ -206,7 +206,16 @@
         @media (max-width: 600px) {
             .container {
                 width: 95%;
-                padding: 20px;
+                padding: 15px;
+                margin: 10px;
+                font-size: 0.95em;
+            }
+            h1 {
+                font-size: 1.5em;
+                margin-bottom: 20px;
+            }
+            .share-link {
+                padding: 15px;
             }
             .social-share {
                 flex-direction: column;
@@ -272,7 +281,19 @@
                 drops[i]++;
             }
         }
-        setInterval(draw, 33);
+        requestAnimationFrame(function animate() {
+            draw();
+            requestAnimationFrame(animate);
+        });
+        
+        // Optimize performance
+        document.addEventListener("DOMContentLoaded", function() {
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                img.loading = 'lazy';
+                img.decoding = 'async';
+            });
+        });
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
