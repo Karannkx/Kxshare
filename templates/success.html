@@ -25,12 +25,17 @@
         .container {
             width: 90%;
             max-width: 800px;
-            background: rgba(0,15,0,0.95);
+            background: rgba(8,12,20,0.8);
             padding: 30px;
-            border-radius: 10px;
-            border: 1px solid #00ff00;
-            box-shadow: 0 0 30px rgba(0,255,0,0.1);
+            border-radius: 15px;
+            border: 2px solid rgba(14,224,224,0.3);
+            box-shadow: 0 0 30px rgba(14,224,224,0.1);
             animation: slideIn 0.5s ease-out, float 4s ease-in-out infinite;
+            backdrop-filter: blur(12px);
+        }
+        .container:hover {
+            border-color: var(--primary);
+            box-shadow: var(--neon-glow);
         }
         @keyframes slideIn {
             from { transform: translateY(-30px); opacity: 0; }
