@@ -28,7 +28,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'your-secret-key-here')  # Set this in .env
 # Initialize TinyDB
 db = TinyDB('database.json')
 
-# Generate encryption key from SECRET_KEY
+# Generate encryption key from SECRET_KEY (for both token and password encryption)
 def get_encryption_key():
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
@@ -48,9 +48,13 @@ def home():
         token = request.form['token']
         repo_url = request.form['repo_url']
         expiry_days = int(request.form['expiry_days'])
+        protection_password = request.form.get('protection_password', '')
 
         # Encrypt token
         encrypted_token = cipher.encrypt(token.encode())
+
+        # Encrypt password if provided
+        encrypted_password = cipher.encrypt(protection_password.encode()) if protection_password else ''
 
         # Extract owner and repo from URL
         try:
@@ -62,9 +66,6 @@ def home():
         # Generate unique share ID
         share_id = str(uuid.uuid4())
 
-        # Get optional password
-        protection_password = request.form.get('protection_password', '')
-
         # Store in database with encrypted password
         db.insert({
             'share_id': share_id,
@@ -74,13 +75,13 @@ def home():
             'created_at': datetime.now().isoformat(),
             'expiry': (datetime.now() + timedelta(days=expiry_days)).isoformat(),
             'is_protected': bool(protection_password),
-            'password': protection_password
+            'password': encrypted_password.decode() if encrypted_password else ''  # Encrypted password
         })
 
         share_link = url_for('view_repo', share_id=share_id, _external=True)
 
         # Generate QR code
-        qr = qrcode.QRCode(version=1, box_size=10, border=5)
+        qr =qrcode.QRCode(version=1, box_size=10, border=5)
         qr.add_data(share_link)
         qr.make(fit=True)
         img = qr.make_image(fill_color="black", back_color="white")
@@ -102,9 +103,8 @@ def home():
     response.headers['Cache-Control'] = 'public, max-age=300'
     return response
 
-# View repository route
+# View repository route (updated for encrypted passwords)
 @app.route('/view/<share_id>', methods=['GET', 'POST'])
-@cache.memoize(timeout=300)  # Cache for 5 minutes
 def view_repo(share_id):
     q = Query()
     repo_data = db.search(q.share_id == share_id)
@@ -115,16 +115,23 @@ def view_repo(share_id):
     repo_data = repo_data[0]
     if repo_data.get('is_protected'):
         if request.method == 'POST':
-            entered_password = request.form.get('password')
-            stored_password = repo_data.get('password')
-            
-            print(f"Debug - Entered: '{entered_password}', Stored: '{stored_password}'")
-            
-            if entered_password == stored_password:
-                print("Password matched!")
-                return render_repo_content(repo_data)
-            print("Password mismatch!")
-            return render_template('password.html', share_id=share_id, error=True)
+            entered_password = request.form.get('password', '').strip()
+            stored_encrypted_password = repo_data.get('password', '')
+
+            try:
+                # Decrypt stored password
+                stored_password = cipher.decrypt(stored_encrypted_password.encode()).decode()
+                print(f"Debug - Entered: '{entered_password}' (len: {len(entered_password)}), Decrypted Stored: '{stored_password}' (len: {len(stored_password)})")
+
+                if entered_password == stored_password:
+                    print("Password matched! Redirecting to repo content...")
+                    return render_repo_content(repo_data)
+                else:
+                    print("Password mismatch! Returning to password page...")
+                    return render_template('password.html', share_id=share_id, error="Incorrect password")
+            except Exception as e:
+                print(f"Decryption error: {e}")
+                return render_template('password.html', share_id=share_id, error="Incorrect password or decryption failed")
         return render_template('password.html', share_id=share_id)
     return render_repo_content(repo_data)
 
