@@ -122,11 +122,12 @@ def view_repo(share_id):
                 decrypted_password = cipher.decrypt(stored_encrypted_password.encode()).decode()
                 
                 if entered_password == decrypted_password:
+                    print("Password matched!")
                     return render_repo_content(repo_data)
-                else:
-                    return render_template('password.html', share_id=share_id, error=True)
+                print("Password mismatch!")
+                return render_template('password.html', share_id=share_id, error=True)
             except Exception as e:
-                print("Decryption error:", e)
+                print(f"Decryption error: {str(e)}")
                 return render_template('password.html', share_id=share_id, error=True)
         return render_template('password.html', share_id=share_id)
     return render_repo_content(repo_data)
