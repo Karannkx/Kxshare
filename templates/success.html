@@ -5,36 +5,67 @@
     <title>Link Generated</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
             font-family: 'Courier New', monospace;
             background-color: #0a0a0a;
             color: #00ff00;
-            margin: 0;
-            padding: 20px;
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
         .container {
+            width: 90%;
             max-width: 800px;
-            margin: 0 auto;
-            background: rgba(0,20,0,0.7);
+            background: rgba(0,15,0,0.95);
             padding: 30px;
+            border-radius: 10px;
             border: 1px solid #00ff00;
-            animation: slideIn 0.5s ease-out;
-        }
-        h1 { text-align: center; letter-spacing: 2px; }
-        a { color: #00ff00; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        .share-link {
-            padding: 15px;
-            background: #001400;
-            border: 1px solid #00ff00;
-            margin: 20px 0;
-            word-break: break-all;
+            box-shadow: 0 0 30px rgba(0,255,0,0.1);
+            animation: slideIn 0.5s ease-out, float 4s ease-in-out infinite;
         }
         @keyframes slideIn {
-            from { transform: translateY(-20px); opacity: 0; }
+            from { transform: translateY(-30px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        h1 { 
+            text-align: center; 
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+        .share-link {
+            padding: 20px;
+            background: rgba(0,20,0,0.3);
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            margin: 20px 0;
+            word-break: break-all;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0,255,0,0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(0,255,0,0); }
+            100% { box-shadow: 0 0 0 0 rgba(0,255,0,0); }
+        }
+        a { 
+            color: #00ff00; 
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        a:hover { 
+            text-shadow: 0 0 10px #00ff00;
+        }
+        p {
+            text-align: center;
+            margin-top: 20px;
+            opacity: 0.8;
         }
     </style>
 </head>
