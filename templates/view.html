@@ -41,31 +41,56 @@
         }
         h1, h2 { 
             letter-spacing: 2px;
-            border-bottom: 1px solid #00ff00;
+            border-bottom: 1px solid var(--primary);
             padding-bottom: 10px;
+            margin: 20px 0;
+            color: var(--primary);
         }
-        .file-list {
+        .file-tree {
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(8,12,20,0.8);
+            border: 1px solid var(--primary);
+            margin: 20px 0;
+        }
+        .file-tree ul {
             list-style: none;
-            padding: 0;
+            padding-left: 20px;
         }
-        .file-list li {
-            margin: 5px 0;
-            padding: 8px;
-            border: 1px solid #003000;
-            background: #001400;
-            transition: all 0.3s;
+        .file-tree > ul {
+            padding-left: 0;
         }
-        .file-list li {
-            position: relative;
-            overflow: hidden;
+        .file-item {
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(14,224,224,0.1);
+            border: 1px solid rgba(14,224,224,0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
         }
-        .file-list li:hover {
-            background: linear-gradient(45deg, #002033, #000066);
+        .file-item:hover {
+            background: rgba(14,224,224,0.2);
             transform: translateX(5px);
-            border-color: var(--accent);
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(14,224,224,0.2);
         }
-        .file-list li::before {
+        .file-item i {
+            color: var(--primary);
+            font-style: normal;
+        }
+        .file-type {
+            font-size: 0.8em;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background: rgba(14,224,224,0.2);
+            color: var(--primary);
+            margin-left: auto;
+        }
+        .folder > .file-item::before {
             content: '';
             position: absolute;
             top: 0;
@@ -92,8 +117,33 @@
             box-shadow: 0 0 10px #00ff00;
         }
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 15px;
+                margin: 10px;
+            }
+            .file-tree {
+                padding: 10px;
+            }
+            .file-item {
+                padding: 8px;
+                font-size: 0.9em;
+            }
+            h1, h2 {
+                font-size: 1.5em;
+            }
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(14,224,224,0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(14,224,224,0); }
+            100% { box-shadow: 0 0 0 0 rgba(14,224,224,0); }
+        }
+        .file-item:active {
+            animation: pulse 0.3s ease-out;
         }
     </style>
 </head>
@@ -102,12 +152,23 @@
         <h1>{{ owner }}/{{ repo }}</h1>
         <h2>README</h2>
         <div>{{ readme_content | safe }}</div>
-        <h2>Files</h2>
-        <ul class="file-list">
-            {% for file in files %}
-                <li>{{ file.name }} ({{ file.type }})</li>
-            {% endfor %}
-        </ul>
+        <h2>Repository Structure</h2>
+        <div class="file-tree">
+            <ul>
+                {% for file in files %}
+                    <li class="{{ file.type }}">
+                        <div class="file-item">
+                            <i>{{ '📁' if file.type == 'dir' else '📄' }}</i>
+                            <span>{{ file.name }}</span>
+                            <span class="file-type">{{ file.type }}</span>
+                        </div>
+                        {% if file.type == 'dir' %}
+                        <ul class="subfolder"></ul>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
         <a href="{{ url_for('download_repo', share_id=share_id) }}">Download ZIP</a>
     </div>
 <canvas class="matrix-rain" id="matrix"></canvas>
