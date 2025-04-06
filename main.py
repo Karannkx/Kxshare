@@ -85,6 +85,8 @@ def view_repo(share_id):
     expiry = datetime.fromisoformat(repo_data['expiry'])
 
     if datetime.now() > expiry:
+        # Delete expired entry
+        db.remove(q.share_id == share_id)
         return render_template('expired.html')
 
     # Decrypt token
@@ -125,7 +127,10 @@ def download_repo(share_id):
     q = Query()
     repo_data = db.search(q.share_id == share_id)
 
-    if not repo_data or datetime.now() > datetime.fromisoformat(repo_data[0]['expiry']):
+    if not repo_data:
+        abort(404)
+    if datetime.now() > datetime.fromisoformat(repo_data[0]['expiry']):
+        db.remove(q.share_id == share_id)
         abort(404)
 
     repo_data = repo_data[0]
