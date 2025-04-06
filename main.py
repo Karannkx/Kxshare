@@ -99,7 +99,9 @@ def home():
                              qr_code=qr_code,
                              expiry_date=expiry_date)
 
-    return render_template('home.html')
+    response = make_response(render_template('home.html'))
+    response.headers['Cache-Control'] = 'public, max-age=300'
+    return response
 
 # View repository route
 @app.route('/view/<share_id>', methods=['GET', 'POST'])

@@ -203,7 +203,10 @@
                 drops[i]++;
             }
         }
-        setInterval(draw, 33);
+        requestAnimationFrame(function animate() {
+            draw();
+            requestAnimationFrame(animate);
+        });
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
