@@ -1,135 +1,107 @@
-KxShare 🚀
+# ⚡ KXShare — GitHub Repo Sharer
 
-Securely share GitHub repositories with optional password protection, expiry dates, and a sharable QR code. Hosted version available at:
+A secure and simple way to share GitHub repositories with optional **expiry**, **password protection**, and **QR code** support. Perfect for quick, temporary access with privacy.
 
-https://kxshare.onrender.com
+## 🚀 Features
 
-
----
-
-Features ✨
-
-Token-based access to private repositories
-
-Password protection for links
-
-Set expiry date for access
-
-QR code generation for quick sharing
-
-Markdown rendering of README
-
-In-browser repo file viewer
-
-Download as ZIP functionality
-
-
+- Encrypted **GitHub token** storage
+- Optional **password protection**
+- Set custom **expiry duration**
+- Shareable **unique link** for clients/Resume and other without collab
+- **QR code** generation for link sharing
+- Auto-expiry and auto-delete
+- View **README** and repository files
+- One-click **ZIP download**
+- Mobile-friendly UI
 
 ---
 
-Demo Link 🔗
+## 🛠 Setup Instructions
 
-Live Site: kxshare.onrender.com
+### 1. Clone the Repository
 
+```bash
+git clone https://github.com/karannkx/pvt_repo_accessor.git
+cd pvt_repo_accessor
+```
+
+### 2. Create a `.env` File
+
+```env
+SECRET_KEY=your_super_secret_key_here
+```
+
+Make sure this key is strong and private.
 
 ---
 
-Setup Instructions (Local Development) ⚙️
+## ⚙️ Run the App Locally
 
-> ℹ️ Already deployed at kxshare.onrender.com. The steps below are only if you want to run or modify it locally.
-
-
-
-1. Clone the repository
-
-git clone https://github.com/your-username/repo-sharer.git
-cd repo-sharer
-
-2. Create a .env file
-
-SECRET_KEY=your-secret-key
-
-3. Install dependencies
-
+```bash
 pip install -r requirements.txt
-
-4. Run the app
-
 python main.py
+```
 
-Visit http://localhost:5000
-
-
----
-
-Deployment (Render) 🚀
-
-1. Go to render.com
-
-
-2. Create a new Web Service
-
-
-3. Connect your GitHub repo
-
-
-4. Set build command: pip install -r requirements.txt
-
-
-5. Set run command: python main.py
-
-
-6. Add environment variable:
-
-SECRET_KEY=your-secret-key
-
-
-
-
-Done! Your site will be live on a render URL like https://your-app-name.onrender.com
-
+Then visit:  
+`http://localhost:5000`
 
 ---
 
-Meta Tags for SEO and Social Sharing 🧠
+## 🌐 Deployment
 
-Add the following to your <head> inside templates/base.html (or similar):
+This project is already hosted on **Render**:  
+[https://kxshare.onrender.com](https://kxshare.onrender.com)
 
-<meta property="og:title" content="GitHub Repo Sharer">
-<meta property="og:description" content="Securely share GitHub repos with expiry, password protection, and QR.">
-<meta property="og:url" content="{{ request.url }}">
-<meta property="og:image" content="{{ url_for('static', filename='preview.png', _external=True) }}">
+To deploy your own:
 
+1. Push the repo to GitHub  
+2. Create a new Web Service on [Render](https://render.com/)  
+3. Add `SECRET_KEY` in Render environment variables  
+4. Set the Build and Start Commands:
 
----
-
-Google Analytics Integration 📈
-
-Paste your GA tracking script inside base.html before the closing </head> tag:
-
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-XXXXXXXXXX');
-</script>
-
-Replace G-XXXXXXXXXX with your actual GA Measurement ID.
-
+```txt
+Build Command: pip install -r requirements.txt
+Start Command: python main.py
+```
 
 ---
 
-License 📄
+## 🧠 How It Works
 
-MIT License. Feel free to fork, share, and contribute!
-
+1. **Submit** your GitHub repo URL and token.
+2. Token is **encrypted** and stored.
+3. A **unique link** is generated (with QR and expiry).
+4. Optionally set a **password**.
+5. Share the link — viewer can **see README**, **browse files**, and **download ZIP**.
 
 ---
 
-Author
+## 🔒 Tech Used
 
-Made with passion by @your-username
-GitHub
+- Flask
+- TinyDB
+- GitHub API
+- qrcode
+- Markdown
+- Cryptography (Fernet AES)
+- Render (Deployment)
 
+---
+
+## ✨ Example
+
+Live Demo:  
+[https://kxshare.onrender.com](https://kxshare.onrender.com)
+
+---
+
+## 📷 Preview
+
+![Preview](static/preview.png)
+
+---
+
+## 📄 License
+
+MIT License © 2025  
+Developed by [Karannkx]
