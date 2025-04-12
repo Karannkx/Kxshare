@@ -95,13 +95,15 @@ Live Demo:
 
 ---
 
-## 📷 Preview
+## Demo Video
 
-![Preview](static/preview.png)
+Watch the quick demo of GitHub Repo Sharer in action:
+
+[![Watch the demo](https://img.youtube.com/vi/JdDakuW75KY/hqdefault.jpg)](https://youtube.com/shorts/JdDakuW75KY?feature=share)
 
 ---
 
 ## 📄 License
 
 MIT License © 2025  
-Developed by [Karannkx]
+Developed by @Karannkx
