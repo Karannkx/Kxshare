@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 import markdown
 import io
 import zipfile
+from flask import send_from_directory
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -210,5 +211,12 @@ def download_repo(share_id):
         download_name=f'{repo}.zip'
     )
 
+@app.route('/sitemap.xml')
+def sitemap():
+    return send_from_directory('static', 'sitemap.xml')
+
+@app.route('/robots.txt')
+def robots():
+    return send_from_directory('static', 'robots.txt')
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
