@@ -159,6 +159,7 @@
         <div class="readme-content">{{ readme_content | safe }}</div>
         <h2>Repository Structure</h2>
         <div class="file-tree">
+            {% macro render_files(files) %}
             <ul>
                 {% for file in files %}
                     <li>
@@ -167,12 +168,14 @@
                             <span class="file-name">{{ file.name }}</span>
                             <span class="file-type">{{ file.type }}</span>
                         </div>
-                        {% if file.type == 'dir' %}
-                        <ul class="subfolder"></ul>
+                        {% if file.type == 'dir' and file.children %}
+                            {{ render_files(file.children) }}
                         {% endif %}
                     </li>
                 {% endfor %}
             </ul>
+            {% endmacro %}
+            {{ render_files(files) }}
         </div>
         <a href="{{ url_for('download_repo', share_id=share_id) }}" class="download-btn">
             <span>⬇️</span> Download ZIP
