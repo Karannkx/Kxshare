@@ -2,8 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://kxshare.onrender.com/</loc>
-    <changefreq>weekly</changefreq>
+    <lastmod>2024-04-13</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
-  <!-- Add more <url> blocks if there are more pages -->
+  <url>
+    <loc>https://kxshare.onrender.com/view</loc>
+    <changefreq>always</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>
