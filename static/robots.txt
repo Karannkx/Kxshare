@@ -1,4 +1,5 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /view/*
 
 Sitemap: https://kxshare.onrender.com/sitemap.xml
