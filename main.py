@@ -161,13 +161,20 @@ def render_repo_content(repo_data):
         readme_text = base64.b64decode(readme_resp.json()['content']).decode('utf-8')
         readme_content = markdown.markdown(readme_text)
 
-    # Fetch repo contents
-    contents_url = f'https://api.github.com/repos/{owner}/{repo}/contents'
-    contents_resp = requests.get(contents_url, headers=headers)
+    def fetch_directory_contents(path=''):
+        contents_url = f'https://api.github.com/repos/{owner}/{repo}/contents/{path}'
+        contents_resp = requests.get(contents_url, headers=headers)
+        
+        if contents_resp.status_code == 200:
+            contents = contents_resp.json()
+            for item in contents:
+                if item['type'] == 'dir':
+                    item['children'] = fetch_directory_contents(item['path'])
+            return contents
+        return []
 
-    files = []
-    if contents_resp.status_code == 200:
-        files = contents_resp.json()
+    # Fetch repo contents recursively
+    files = fetch_directory_contents()
 
     response = make_response(render_template('view.html', 
                          readme_content=readme_content,
