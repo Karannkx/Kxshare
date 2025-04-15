@@ -17,21 +17,11 @@ jobs:
           response=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 https://kxshare.onrender.com || echo "Curl failed")
           echo "HTTP Response: $response, Avg Time: $avg_time"
 
-          # Simulate success and failure counts randomly
+          # Simulate success and failure counts
           rand_failures=$((RANDOM % 3))
           rand_success=$((12 - rand_failures))
-
-          # Determine health status based on failures
-          if [ $rand_failures -eq 0 ]; then
-            health="⚡️⚡️⚡️⚡️⚡️"
-          elif [ $rand_failures -le 2 ]; then
-            health="⚡️⚡️⚡️⚡️⚪️"
-          else
-            health="⚡️⚡️⚡️⚪️⚪️"
-          fi
 
           # Send hourly update to Telegram
           curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
             -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
-            -d parse_mode="MarkdownV2" \
-            -d text="📊 *KxShare Uptime Dashboard — Last 1h*\n\n🟢 Success: $rand_success/12\n🔴 Failures: $rand_failures\n\n⚡ Avg Response: ${avg_time}s\n\n🧠 Health: $health\n\n⏰ Next scan in 1 hour..." || echo "Failed to send Telegram dashboard"
+            -d text="KxShare Uptime Dashboard - Last 1h\nSuccess: $rand_success/12\nFailures: $rand_failures\nAvg Response: $avg_time s\nNext scan in 1 hour" || echo "Failed to send Telegram dashboard"
