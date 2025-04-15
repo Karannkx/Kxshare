@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
       - name: Generate Hourly Uptime Dashboard
         run: |
           echo "Generating hourly dashboard..."
@@ -17,11 +20,41 @@ jobs:
           response=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 https://kxshare.onrender.com || echo "Curl failed")
           echo "HTTP Response: $response, Avg Time: $avg_time"
 
-          # Simulate success and failure counts
-          rand_failures=$((RANDOM % 3))
-          rand_success=$((12 - rand_failures))
+          # Calculate success and failure counts from ping_results.csv
+          if [ -f ping_results.csv ]; then
+            # Get current time and time 1 hour ago in UTC
+            current_time=$(date -u +"%s")
+            one_hour_ago=$((current_time - 3600))
+            
+            success_count=0
+            failure_count=0
+            
+            # Read ping_results.csv and count success/failures in last hour
+            while IFS=, read -r timestamp http_code; do
+              ts=$(date -d "$timestamp" +"%s" 2>/dev/null || continue)
+              if [ "$ts" -ge "$one_hour_ago" ] && [ "$ts" -le "$current_time" ]; then
+                if [ "$http_code" = "200" ]; then
+                  success_count=$((success_count + 1))
+                else
+                  failure_count=$((failure_count + 1))
+                fi
+              fi
+            done < ping_results.csv
+            
+            total_checks=$((success_count + failure_count))
+            if [ $total_checks -eq 0 ]; then
+              total_checks=1
+              success_count=0
+              failure_count=0
+            fi
+          else
+            # Fallback if no data
+            success_count=0
+            failure_count=0
+            total_checks=1
+          fi
 
           # Send hourly update to Telegram
           curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
             -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
-            -d text="KxShare Uptime Dashboard - Last 1h\nSuccess: $rand_success/12\nFailures: $rand_failures\nAvg Response: $avg_time s\nNext scan in 1 hour" || echo "Failed to send Telegram dashboard"
+            -d text="KxShare Uptime Dashboard - Last 1h\nSuccess: $success_count/$total_checks\nFailures: $failure_count\nAvg Response: $avg_time s\nNext scan in 1 hour" || echo "Failed to send Telegram dashboard"
