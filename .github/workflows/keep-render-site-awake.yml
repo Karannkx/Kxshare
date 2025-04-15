@@ -36,10 +36,35 @@ jobs:
               -d text="ALERT: KxShare is DOWN. HTTP Response: $response" || echo "Failed to send Telegram alert"
           fi
 
+      - name: Clean Up Old Ping Results
+        run: |
+          echo "Cleaning up old ping results..."
+          if [ -f ping_results.csv ]; then
+            # Get current time and time 24 hours ago in epoch seconds
+            current_time=$(date -u +"%s")
+            one_day_ago=$((current_time - 86400)) # 24 hours = 86400 seconds
+            
+            # Create a temporary file
+            temp_file=$(mktemp)
+            
+            # Filter out entries older than 24 hours
+            while IFS=, read -r timestamp http_code; do
+              ts=$(date -d "$timestamp" +"%s" 2>/dev/null || continue)
+              if [ "$ts" -ge "$one_day_ago" ]; then
+                echo "$timestamp,$http_code" >> "$temp_file"
+              fi
+            done < ping_results.csv
+            
+            # Replace original file with filtered data
+            mv "$temp_file" ping_results.csv
+          else
+            echo "No ping_results.csv found, skipping cleanup."
+          fi
+
       - name: Commit and Push Results
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
           git add ping_results.csv
-          git commit -m "Update ping results" || echo "Nothing to commit"
+          git commit -m "Update ping results with cleanup" || echo "Nothing to commit"
           git push || echo "Push failed"
