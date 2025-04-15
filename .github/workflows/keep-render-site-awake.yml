@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
       - name: Notify Bot Activation
         run: |
           echo "Sending bot activation message..."
@@ -23,8 +26,20 @@ jobs:
           response=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 https://kxshare.onrender.com || echo "Curl failed")
           echo "HTTP Response: $response"
 
+          # Save result to a file with timestamp
+          timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          echo "$timestamp,$response" >> ping_results.csv
+
           if [ "$response" != "200" ]; then
             curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
               -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
               -d text="ALERT: KxShare is DOWN. HTTP Response: $response" || echo "Failed to send Telegram alert"
           fi
+
+      - name: Commit and Push Results
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add ping_results.csv
+          git commit -m "Update ping results" || echo "Nothing to commit"
+          git push || echo "Push failed"
