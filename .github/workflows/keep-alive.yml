@@ -11,4 +11,18 @@ jobs:
 
     steps:
       - name: Curl Ping to KxShare
-        run: curl -s https://kxshare.onrender.com
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://kxshare.onrender.com)
+          if [ "$response" != "200" ]; then
+            curl -X POST "https://api.telegram.org/bot8013771704:AAEYHBxXX-gs31qBKdfOgl2FwETsZZ6PX_g/sendMessage" \
+              -d chat_id="8013771704" \
+              -d text="🚨💥 *KxShare is DOWN!* 💥🚨\n\n*HTTP Response:* $response\n\n💀⚡ _System alert triggered!_ ⚡💀\n\n🔓💻 _Hacker alert!_ 💻🔓\n\n⚠️ _Fix it quickly before it's too late!_ ⚠️"
+          fi
+          
+      - name: Curl Ping to Another Site (Optional)
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://another-url.onrender.com)
+          if [ "$response" != "200" ]; then
+            curl -X POST "https://api.telegram.org/bot8013771704:AAEYHBxXX-gs31qBKdfOgl2FwETsZZ6PX_g/sendMessage" \
+              -d chat_id="8013771704" \
+              -d text="🚨💥 *Another site is DOWN!* 💥🚨\n\n*HTTP Response:* $response\n\n💀⚡ _System alert triggered!_ ⚡💀\n\n🔓💻 _Hacker alert!_ 💻🔓\n\n⚠️ _Fix it quickly before it's too late!_ ⚠️"
