@@ -18,7 +18,8 @@ jobs:
           echo "Sending bot activation message..."
           curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
             -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
-            -d text="KxShare Bot Activated. Monitoring started. Checking every 5 min." || echo "Failed to send Telegram notification"
+            -d parse_mode="HTML" \
+            -d text="KxShare Bot Activated.<br>Monitoring started.<br>Checking every 5 min." || echo "Failed to send Telegram notification"
 
       - name: Curl Ping to KxShare
         run: |
@@ -33,7 +34,8 @@ jobs:
           if [ "$response" != "200" ]; then
             curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
               -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
-              -d text="ALERT: KxShare is DOWN. HTTP Response: $response" || echo "Failed to send Telegram alert"
+              -d parse_mode="HTML" \
+              -d text="ALERT: KxShare is DOWN.<br>HTTP Response: $response" || echo "Failed to send Telegram alert"
           fi
 
       - name: Clean Up Old Ping Results
@@ -57,6 +59,8 @@ jobs:
             
             # Replace original file with filtered data
             mv "$temp_file" ping_results.csv
+            echo "Cleanup complete. Remaining entries:"
+            cat ping_results.csv
           else
             echo "No ping_results.csv found, skipping cleanup."
           fi
