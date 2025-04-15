@@ -2,8 +2,7 @@ name: Keep Render Site Awake
 
 on:
   schedule:
-    - cron: "*/5 * * * *"    # Every 5 minutes
-    - cron: "0 * * * *"      # Every 1 hour
+    - cron: "*/1 * * * *"  # Every minute (since 5 seconds is not supported)
   workflow_dispatch:
 
 jobs:
@@ -15,44 +14,16 @@ jobs:
         run: |
           curl -X POST "https://api.telegram.org/bot8013771704:AAEYHBxXX-gs31qBKdfOgl2FwETsZZ6PX_g/sendMessage" \
             -d chat_id="1153612786" \
-            -d parse_mode="Markdown" \
-            -d text="✅ *KxShare Bot Activated!*\n\n🧠 _Monitoring system engaged_\n\n⚙️ *Keep-Alive Sequence Running...*\n\n🔄 Every 5 min check enabled\n⏰ Hourly dashboard ready\n\n👾 *Bot is now ALIVE & WATCHING* 👁️‍🗨️"
+            -d parse_mode="MarkdownV2" \
+            -d text="✅ *KxShare Bot Activated!*\n\n🧠 _Monitoring system engaged_\n\n⚙️ *Keep-Alive Sequence Running...*\n\n🔄 Every 1 min check enabled\n⏰ Hourly dashboard ready\n\n👾 *Bot is now ALIVE & WATCHING* 👁️‍🗨️"
 
       - name: Curl Ping to KxShare
         run: |
-          echo "Running 5-min check..."
+          echo "Running 1-min check..."
           response=$(curl -s -o /dev/null -w "%{http_code}" https://kxshare.onrender.com)
 
           if [ "$response" != "200" ]; then
             curl -X POST "https://api.telegram.org/bot8013771704:AAEYHBxXX-gs31qBKdfOgl2FwETsZZ6PX_g/sendMessage" \
               -d chat_id="1153612786" \
+              -d parse_mode="MarkdownV2" \
               -d text="🚨💥 *KxShare is DOWN!* 💥🚨\n\n*HTTP Response:* $response\n\n💀⚡ _System alert triggered!_ ⚡💀\n\n🔓💻 _Hacker alert!_ 💻🔓\n\n⚠️ _Fix it quickly before it's too late!_ ⚠️"
-
-  hourly-dashboard:
-    runs-on: ubuntu-latest
-    if: github.event.schedule == '0 * * * *'
-
-    steps:
-      - name: Generate Hourly Uptime Dashboard
-        run: |
-          echo "Generating hourly dashboard..."
-          avg_time=$(curl -s -w "%{time_total}" -o /dev/null https://kxshare.onrender.com)
-          response=$(curl -s -o /dev/null -w "%{http_code}" https://kxshare.onrender.com)
-
-          rand_failures=$((RANDOM % 3))
-          rand_success=$((12 - rand_failures))
-
-          if [ $rand_failures -eq 0 ]; then
-            health="⚡️⚡️⚡️⚡️⚡️"
-          elif [ $rand_failures -le 2 ]; then
-            health="⚡️⚡️⚡️⚡️⚪️"
-          elif [ $rand_failures -le 4 ]; then
-            health="⚡️⚡️⚡️⚪️⚪️"
-          else
-            health="⚠️⚠️⚠️⚠️⚠️"
-          fi
-
-          curl -X POST "https://api.telegram.org/bot8013771704:AAEYHBxXX-gs31qBKdfOgl2FwETsZZ6PX_g/sendMessage" \
-            -d chat_id="1153612786" \
-            -d parse_mode="Markdown" \
-            -d text="📊 *KxShare Uptime Dashboard — Last 1h*\n\n🟢 Success: $rand_success/12\n🔴 Failures: $rand_failures\n\n⚡ Avg Response: ${avg_time}s\n\n🧠 Health: $health\n\n⏰ Next scan in 1 hour..."
