@@ -12,10 +12,10 @@ jobs:
     steps:
       - name: Notify Bot Activation
         run: |
+          echo "Sending bot activation message..."
           curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
             -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
-            -d parse_mode="MarkdownV2" \
-            -d text="✅ *KxShare Bot Activated!*\n\n🧠 _Monitoring system engaged_\n\n⚙️ *Keep-Alive Sequence Running...*\n\n🔄 Every 5 min check enabled\n\n👾 *Bot is now ALIVE & WATCHING* 👁️‍🗨️" || echo "Failed to send Telegram notification"
+            -d text="KxShare Bot Activated. Monitoring started. Checking every 5 min." || echo "Failed to send Telegram notification"
 
       - name: Curl Ping to KxShare
         run: |
@@ -26,6 +26,5 @@ jobs:
           if [ "$response" != "200" ]; then
             curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
               -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
-              -d parse_mode="MarkdownV2" \
-              -d text="🚨💥 *KxShare is DOWN!* 💥🚨\n\n*HTTP Response:* $response\n\n💀⚡ _System alert triggered!_ ⚡💀\n\n🔓💻 _Hacker alert!_ 💻🔓\n\n⚠️ _Fix it quickly before it's too late!_ ⚠️" || echo "Failed to send Telegram alert"
+              -d text="ALERT: KxShare is DOWN. HTTP Response: $response" || echo "Failed to send Telegram alert"
           fi
