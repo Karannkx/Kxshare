@@ -46,9 +46,9 @@ jobs:
               total_checks=1
               success_count=0
               failure_count=0
+              echo "No valid checks found in last hour, using fallback counts."
             fi
           else
-            # Fallback if no data
             success_count=0
             failure_count=0
             total_checks=1
@@ -58,5 +58,5 @@ jobs:
           # Send hourly update to Telegram
           curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
             -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
-            -d parse_mode="HTML" \
-            -d text="KxShare Uptime Dashboard - Last 1h<br>Success: $success_count/$total_checks<br>Failures: $failure_count<br>Avg Response: $avg_time s<br>Next scan in 1 hour" || echo "Failed to send Telegram dashboard"
+            -d parse_mode="Markdown" \
+            -d text="KxShare Uptime Dashboard - Last 1h\nSuccess: $success_count/$total_checks\nFailures: $failure_count\nAvg Response: $avg_time s\nNext scan in 1 hour" || echo "Failed to send Telegram dashboard"
