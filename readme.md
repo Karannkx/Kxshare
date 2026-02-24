@@ -1,6 +1,6 @@
-# ⚡ KXShare — Secure GitHub Repository Sharer
+# ⚡ KXShare — AI-Powered Secure GitHub Repository Sharer
 
-> **Share private GitHub repositories securely with encrypted tokens, password protection, QR codes, and AI-powered README generation.**
+> **Share private GitHub repositories securely with encrypted tokens, password protection, QR codes, and AI-powered README generation using Gemini AI.**
 
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 [![MongoDB](https://img.shields.io/badge/Database-MongoDB-green?style=for-the-badge&logo=mongodb)](https://www.mongodb.com/)
@@ -315,7 +315,9 @@ MONGO_URI=mongodb+srv://user:pass@cluster.mongodb.net/ docker-compose up -d
 
 ## 🤝 Contributing
 
-Contributions welcome! This project is **open source**.
+**🎉 KXShare is now open sourced!** We welcome contributions from the community.
+
+Contributions welcome! This project is **open source** and available for everyone to contribute.
 
 1. Fork the repository
 2. Create feature branch (`git checkout -b feature/amazing`)
@@ -362,11 +364,21 @@ MIT License © 2025-2026
 
 ## ⚠️ Disclaimer
 
+**⚠️ IMPORTANT:** Using this tool without proper authorization is **NOT ALLOWED**. You must have:
+- Permission to access and share the repositories
+- Valid GitHub token with appropriate scopes
+- Authorization from repository owners
+
+Unauthorized use or distribution of private repositories is a violation of GitHub's Terms of Service and may be illegal.
+
+---
+
 This tool is for **legitimate repository sharing** only. Users are responsible for:
 - Securing their GitHub tokens
 - Respecting repository licenses
 - Not sharing unauthorized content
 - Following GitHub's Terms of Service
+- Obtaining proper permissions before sharing
 
 KXShare encrypts and protects your data but is provided "as-is" without warranties.
 
