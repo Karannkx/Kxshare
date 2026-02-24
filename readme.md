@@ -93,8 +93,8 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/karannkx/pvt_repo_accessor.git
-cd pvt_repo_accessor
+git clone https://github.com/Karannkx/Kxshare.git
+cd Kxshare
 
 # Create .env file
 cat > .env << EOF
@@ -126,8 +126,8 @@ docker-compose logs -f kxshare_app
 
 ```bash
 # Clone repository
-git clone https://github.com/karannkx/pvt_repo_accessor.git
-cd pvt_repo_accessor
+git clone https://github.com/Karannkx/Kxshare.git
+cd Kxshare
 
 # Install MongoDB locally (macOS)
 brew tap mongodb/brew
@@ -217,7 +217,7 @@ docker run -p 5000:5000 --env-file .env kxshare:latest
 ## 📂 Project Structure
 
 ```
-pvt_repo_accessor/
+Kxshare/
 ├── main.py                 # Flask application & routes
 ├── requirements.txt        # Python dependencies
 ├── Dockerfile             # Docker image configuration
@@ -390,6 +390,6 @@ KXShare encrypts and protects your data but is provided "as-is" without warranti
 
 Made with ❤️ for the open-source community
 
-[Report Bug](https://github.com/Karannkx/pvt_repo_accessor/issues) · [Request Feature](https://github.com/Karannkx/pvt_repo_accessor/issues)
+[Report Bug](https://github.com/Karannkx/Kxshare/issues) · [Request Feature](https://github.com/Karannkx/Kxshare/issues)
 
 </div>
