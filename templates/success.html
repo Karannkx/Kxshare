@@ -1,313 +1,302 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Link Generated</title>
+    <meta charset="UTF-8">
+    <title>Link Generated - KxShare Vault</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
-            --primary: #0fe0e0;
-            --secondary: #ff2975;
-            --accent: #7928ff;
-            --bg: #080c14;
-            --neon-glow: 0 0 10px var(--primary), 0 0 20px var(--primary), 0 0 30px var(--primary);
+            --primary: #ffd93d;
+            --secondary: #66d9ef;
+            --pink: #ff6b9d;
+            --green: #a8e6cf;
+            --bg: #f5f0e6;
+            --border: #000000;
+            --card-bg: #ffffff;
+            --shadow: 6px 6px 0px #000;
         }
-        body { 
-            font-family: 'Courier New', monospace;
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
             background-color: var(--bg);
-            color: var(--primary);
+            background-image: radial-gradient(var(--border) 1px, transparent 1px);
+            background-size: 25px 25px;
+            color: var(--border);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* No scroll on laptop */
+        }
+
+        .marquee-top {
+            background: var(--border);
+            color: var(--primary);
+            padding: 8px 0;
+            border-bottom: 3px solid var(--border);
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            text-transform: uppercase;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .marquee-track {
+            display: inline-block;
+            animation: marqueeMove 30s linear infinite;
+        }
+
+        @keyframes marqueeMove {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        .page-wrapper {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* --- DASHBOARD CONTAINER --- */
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            background: var(--card-bg);
+            border: 4px solid var(--border);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* --- HEADER --- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--border);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            text-transform: uppercase;
+            background: var(--secondary);
+            padding: 5px 15px;
+            border: 3px solid var(--border);
+            box-shadow: 4px 4px 0px var(--border);
+        }
+
+        .status-badge {
+            font-family: 'Space Mono';
+            font-weight: bold;
+            font-size: 0.8rem;
+            color: var(--pink);
+            text-transform: uppercase;
+        }
+
+        /* --- CONTENT GRID (Compact 3 Columns) --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 0.8fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .box {
+            background: #fff;
+            border: 3px solid var(--border);
+            padding: 15px;
+            box-shadow: 4px 4px 0px var(--border);
+        }
+
+        .label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            color: rgba(0,0,0,0.6);
+        }
+
+        .link-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            background: #f8f8f8;
+            outline: none;
+            margin-bottom: 15px;
+        }
+
+        .qr-box {
+            text-align: center;
+            background: white;
+        }
+
+        .qr-box img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid var(--border);
+        }
+
+        /* --- EXPIRY & ACTION AREA --- */
+        .expiry-area {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .expiry-tag {
+            background: var(--pink);
+            color: white;
+            padding: 10px;
+            border: 3px solid var(--border);
+            font-family: 'Space Mono';
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: 3px solid var(--border);
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px var(--border);
+            transition: 0.1s;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-            overflow: hidden;
-        }
-        .matrix-rain {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-        .container {
-            width: min(90%, 800px);
-            background: rgba(8,12,20,0.95);
-            padding: clamp(15px, 4vw, 30px);
-            border-radius: 15px;
-            border: 2px solid rgba(14,224,224,0.3);
-            box-shadow: 0 0 30px rgba(14,224,224,0.1);
-            animation: slideIn 0.3s ease-out, float 4s ease-in-out infinite;
-            will-change: transform;
-            contain: layout style paint;
-            z-index: 2;
-        }
-        .container:hover {
-            border-color: var(--primary);
-            box-shadow: var(--neon-glow);
-        }
-        @keyframes slideIn {
-            from { transform: translateY(-30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        h1 { 
-            text-align: center; 
-            letter-spacing: 2px;
-            margin-bottom: 30px;
-            text-transform: uppercase;
-            color: var(--secondary);
-        }
-        .share-link {
-            padding: 20px;
-            background: rgba(8,12,20,0.8);
-            border: 2px solid var(--primary);
-            border-radius: 8px;
-            margin: 20px 0;
-            word-break: break-all;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(14,224,224,0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(14,224,224,0); }
-            100% { box-shadow: 0 0 0 0 rgba(14,224,224,0); }
-        }
-        a { 
-            color: var(--primary);
+            gap: 10px;
+            font-size: 0.85rem;
             text-decoration: none;
-            transition: all 0.3s ease;
+            color: #000;
         }
-        a:hover { 
-            color: var(--secondary);
-            text-shadow: var(--neon-glow);
+
+        .btn:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0px var(--border); }
+        .btn-copy { background: var(--primary); }
+        .btn-open { background: var(--green); }
+        .btn-home { background: var(--bg); }
+
+        /* --- SIDE DECO --- */
+        .side-deco {
+            position: absolute;
+            font-family: 'Space Mono';
+            font-size: 0.7rem;
+            opacity: 0.3;
+            pointer-events: none;
         }
-        p {
-            text-align: center;
-            margin-top: 20px;
-            opacity: 0.8;
-            color: var(--primary);
+        .s-left { left: 3%; top: 30%; transform: rotate(-90deg); }
+        .s-right { right: 3%; bottom: 30%; transform: rotate(90deg); }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 900px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            body { overflow-y: auto; }
+            .container { padding: 20px; }
+            .header { flex-direction: column; gap: 10px; }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 { font-size: 1.4rem; }
+            .container { padding: 15px; }
         }
     </style>
 </head>
 <body>
-    <canvas class="matrix-rain" id="matrix"></canvas>
-    <div class="container">
-        <h1>Link Ready!</h1>
-        <div class="share-link">
-            <div class="link-container">
-                <input type="text" id="shareLink" value="{{ share_link }}" readonly>
-                <button onclick="copyToClipboard()" class="copy-btn">Copy</button>
-            </div>
-            <div class="qr-code">
-                <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code">
-            </div>
-            <div class="social-share">
-                <button onclick="share('twitter')" class="share-btn twitter">Twitter</button>
-                <button onclick="share('linkedin')" class="share-btn linkedin">LinkedIn</button>
-                <button onclick="share('whatsapp')" class="share-btn whatsapp">WhatsApp</button>
-            </div>
-            <div id="countdown" class="countdown"></div>
-        </div>
-        <p>Share this link with others. Time remaining until expiry shown above.</p>
-    </div>
-    <script>
-        function copyToClipboard() {
-            const copyText = document.getElementById("shareLink");
-            copyText.select();
-            document.execCommand("copy");
-            alert("Link copied!");
-        }
-        
-        function share(platform) {
-            const url = encodeURIComponent(document.getElementById("shareLink").value);
-            const text = "Check out this GitHub repository!";
-            let shareUrl = '';
-            
-            switch(platform) {
-                case 'twitter':
-                    shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
-                    break;
-                case 'linkedin':
-                    shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-                    break;
-                case 'whatsapp':
-                    shareUrl = `https://wa.me/?text=${text} ${url}`;
-                    break;
-            }
-            window.open(shareUrl, '_blank');
-        }
 
-        // Countdown timer
-        const expiryDate = new Date("{{ expiry_date }}").getTime();
-        
-        const countdown = setInterval(function() {
-            const now = new Date().getTime();
-            const distance = expiryDate - now;
-            
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            
-            document.getElementById("countdown").innerHTML = `Expires in: ${days}d ${hours}h ${minutes}m ${seconds}s`;
-            
-            if (distance < 0) {
-                clearInterval(countdown);
-                document.getElementById("countdown").innerHTML = "EXPIRED";
-            }
-        }, 1000);
-    </script>
-    <style>
-        .link-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .link-container input {
-            flex: 1;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid var(--primary);
-            background: rgba(8,12,20,0.8);
-            color: var(--primary);
-        }
-        .copy-btn {
-            padding: 10px 20px;
-            background: var(--primary);
-            color: var(--bg);
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .qr-code {
-            margin: 20px auto;
-            text-align: center;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            padding: 15px;
-            border-radius: 15px;
-            width: fit-content;
-            box-shadow: 0 0 30px rgba(14,224,224,0.2);
-            animation: float 4s ease-in-out infinite;
-        }
-        .qr-code img {
-            max-width: min(200px, 90vw);
-            border: 8px solid white;
-            border-radius: 10px;
-            transition: transform 0.3s ease;
-        }
-        .qr-code img:hover {
-            transform: scale(1.05);
-        }
-        @media (max-width: 600px) {
-            .container {
-                width: 95%;
-                padding: 15px;
-                margin: 10px auto;
-                font-size: 0.95em;
-                max-height: 90vh;
-                overflow-y: auto;
-                position: relative;
-                top: 0;
-                transform: none;
-            }
-            body {
-                height: auto;
-                min-height: 100vh;
-                padding: 10px;
-            }
-            h1 {
-                font-size: 1.5em;
-                margin-bottom: 20px;
-            }
-            .share-link {
-                padding: 15px;
-            }
-            .social-share {
-                flex-direction: column;
-            }
-            .share-btn {
-                width: 100%;
-            }
-            .link-container {
-                flex-direction: column;
-            }
-            .copy-btn {
-                width: 100%;
-            }
-        }
-        .social-share {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin: 20px 0;
-        }
-        .share-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            color: white;
-            transition: transform 0.3s ease;
-        }
-        .share-btn:hover {
-            transform: translateY(-2px);
-        }
-        .twitter { background: #1DA1F2; }
-        .linkedin { background: #0077B5; }
-        .whatsapp { background: #25D366; }
-        .countdown {
-            text-align: center;
-            font-size: 1.2em;
-            margin: 20px 0;
-            color: var(--secondary);
-            text-shadow: 0 0 10px var(--secondary);
-        }
-    </style>
+    <div class="marquee-top">
+        <div class="marquee-track">
+            🔒 LINK ARMED AND ENCRYPTED • AES-256 VAULT • AUTO-PURGE ENABLED • SHARE SECURELY • SYSTEM ONLINE •
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="side-deco s-left">// REPO_ID: {{ share_id }} // ENCRYPTED_VAULT</div>
+        <div class="side-deco s-right">// ACCESS_POINT_READY // NO_LOGS</div>
+
+        <main class="container" id="mainCard">
+            <header class="header">
+                <h1>LINK CREATED</h1>
+                <div class="status-badge"><i class="fas fa-circle"></i> SYSTEM: LIVE</div>
+            </header>
+
+            <div class="dashboard-grid">
+                <!-- BOX 1: THE LINK -->
+                <div class="box">
+                    <span class="label"><i class="fas fa-link"></i> Access Link</span>
+                    <input type="text" value="{{ share_link }}" id="shareLink" class="link-input" readonly>
+                    <button class="btn btn-copy" onclick="copyLink()" id="copyBtn">
+                        <i class="fas fa-copy"></i> Copy to Clipboard
+                    </button>
+                </div>
+
+                <!-- BOX 2: EXPIRY & ACTIONS -->
+                <div class="expiry-area">
+                    <div class="box">
+                        <span class="label"><i class="fas fa-clock"></i> Auto-Delete In</span>
+                        <div class="expiry-tag">{{ expiry_date }}</div>
+                    </div>
+                    <a href="{{ share_link }}" target="_blank" class="btn btn-open">
+                        <i class="fas fa-external-link-alt"></i> Preview Tab
+                    </a>
+                    <a href="/" class="btn btn-home">
+                        <i class="fas fa-plus-circle"></i> Create New
+                    </a>
+                </div>
+
+                <!-- BOX 3: QR CODE -->
+                <div class="box qr-box">
+                    <span class="label">Quick Scan</span>
+                    <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code">
+                </div>
+            </div>
+
+            <div style="margin-top: 25px; display: flex; justify-content: space-between; align-items: center; border-top: 3px dashed #000; padding-top: 15px;">
+                <div style="font-family: 'Space Mono'; font-size: 0.7rem; font-weight: bold;">BY <span>KARANNKX</span></div>
+                <div style="display: flex; gap: 15px;">
+                    <a href="https://github.com/Karannkx" style="color:#000;"><i class="fab fa-github"></i></a>
+                    <a href="https://instagram.com/Karannkx" style="color:#000;"><i class="fab fa-instagram"></i></a>
+                    <a href="https://linkedin.com/in/Karannkx" style="color:#000;"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </main>
+    </div>
+
     <script>
-        const canvas = document.getElementById('matrix');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        const characters = "01";
-        const fontSize = 14;
-        const columns = canvas.width/fontSize;
-        const drops = [];
-        for(let x = 0; x < columns; x++) drops[x] = 1;
-        function draw() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#0fe0e0';
-            ctx.font = fontSize + 'px monospace';
-            for(let i = 0; i < drops.length; i++) {
-                const text = characters.charAt(Math.floor(Math.random() * characters.length));
-                ctx.fillText(text, i*fontSize, drops[i]*fontSize);
-                if(drops[i]*fontSize > canvas.height && Math.random() > 0.975)
-                    drops[i] = 0;
-                drops[i]++;
-            }
+        // Snappy Entrance with GSAP
+        window.addEventListener('load', () => {
+            const tl = gsap.timeline();
+            tl.from("#mainCard", { duration: 0.6, y: 40, opacity: 0, ease: "power2.out" })
+              .from(".box", { duration: 0.4, scale: 0.95, opacity: 0, stagger: 0.1, ease: "back.out(1.7)" }, "-=0.3");
+        });
+
+        function copyLink() {
+            const input = document.getElementById('shareLink');
+            const btn = document.getElementById('copyBtn');
+            input.select();
+            document.execCommand('copy');
+
+            // Button Feedback
+            btn.innerHTML = '<i class="fas fa-check"></i> COPIED!';
+            btn.style.background = '#a8e6cf';
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-copy"></i> Copy to Clipboard';
+                btn.style.background = '#ffd93d';
+            }, 2000);
         }
-        requestAnimationFrame(function animate() {
-            draw();
-            requestAnimationFrame(animate);
-        });
-        
-        // Optimize performance
-        document.addEventListener("DOMContentLoaded", function() {
-            const images = document.querySelectorAll('img');
-            images.forEach(img => {
-                img.loading = 'lazy';
-                img.decoding = 'async';
-            });
-        });
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
     </script>
 </body>
 </html>

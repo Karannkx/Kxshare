@@ -1,332 +1,656 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>KxShare - Secure GitHub Repository Sharing Platform</title>
-    <meta name="google-site-verification" content="ecayhjFj2WePvw7KUR5xbZs4D-bGmEAoWWXPFrWVXa8" />
+    <meta charset="UTF-8">
+    <title>KxShare Control Center - Secure Repository Sharing</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Share GitHub repositories securely with password protection, expiry dates, and QR codes. Perfect for temporary access and private sharing.">
-    <meta name="keywords" content="GitHub sharing, secure repository access, temporary GitHub access, QR code sharing, private repo sharing">
-    <meta property="og:title" content="KxShare - Secure GitHub Repository Sharing">
-    <meta property="og:description" content="Share GitHub repositories securely with password protection and expiry dates">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://kxshare.onrender.com/">
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- GSAP Animation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
-            --primary: #0fe0e0;
-            --secondary: #ff2975;
-            --accent: #7928ff;
-            --bg: #080c14;
-            --neon-glow: 0 0 10px var(--primary), 0 0 20px var(--primary), 0 0 30px var(--primary);
+            --primary: #ffd93d;   /* Yellow */
+            --secondary: #66d9ef; /* Cyan */
+            --pink: #ff6b9d;      /* Pink */
+            --green: #a8e6cf;     /* Green */
+            --bg: #f5f0e6;        /* Vintage Paper */
+            --border: #000000;
+            --card-bg: #ffffff;
+            --shadow: 8px 8px 0px #000;
         }
-        body { 
-            font-family: 'Courier New', monospace;
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
             background-color: var(--bg);
-            color: var(--primary);
+            background-image: radial-gradient(var(--border) 1px, transparent 1px);
+            background-size: 25px 25px;
+            color: var(--border);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
             overflow-x: hidden;
+        }
+
+        /* --- TOP MARQUEE --- */
+        .marquee-top {
+            background: var(--border);
+            color: var(--primary);
+            padding: 10px 0;
+            border-bottom: 4px solid var(--border);
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            text-transform: uppercase;
+            overflow: hidden;
+            white-space: nowrap;
+            z-index: 100;
+        }
+
+        .marquee-track {
+            display: inline-block;
+            animation: marqueeMove 25s linear infinite;
+        }
+
+        @keyframes marqueeMove {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        /* --- PAGE WRAPPER --- */
+        .page-wrapper {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
             position: relative;
         }
-        .matrix-rain {
+
+        /* --- STICKERS (Alignment Optimized) --- */
+        .sticker {
+            position: absolute;
+            padding: 10px 15px;
+            border: 3px solid var(--border);
+            font-family: 'Space Mono';
+            font-weight: bold;
+            font-size: 0.7rem;
+            box-shadow: 4px 4px 0px var(--border);
+            z-index: 5;
+            text-transform: uppercase;
+            pointer-events: none;
+        }
+        .s-1 { top: 10%; left: 5%; background: var(--pink); transform: rotate(-10deg); }
+        .s-2 { top: 15%; right: 5%; background: var(--secondary); transform: rotate(10deg); }
+
+        /* --- MAIN DASHBOARD --- */
+        .dashboard-container {
+            max-width: 1050px;
+            width: 100%;
+            background: var(--card-bg);
+            border: 4px solid var(--border);
+            box-shadow: var(--shadow);
+            padding: 35px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .dashboard-container::before {
+            content: "SYSTEM_VAULT_v4.0";
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            padding: 5px 25px;
+            border: 3px solid var(--border);
+            font-family: 'Space Mono';
+            font-weight: bold;
+            font-size: 0.75rem;
+            box-shadow: 4px 4px 0px var(--border);
+        }
+
+        /* --- HEADER --- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--border);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .brand h1 {
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            line-height: 1;
+        }
+
+        .brand span { background: var(--secondary); border: 3px solid var(--border); padding: 0 8px; }
+
+        .btn-mini {
+            padding: 12px 18px;
+            background: var(--green);
+            border: 3px solid var(--border);
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--border);
+            box-shadow: 4px 4px 0px var(--border);
+            font-size: 0.8rem;
+            transition: 0.15s;
+        }
+
+        .btn-mini:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px var(--border); background: #fff; }
+
+        /* --- COMPACT FORM GRID (3-Columns for Laptop) --- */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .double-width { grid-column: span 2; }
+        .full-width { grid-column: span 3; }
+
+        .form-group { position: relative; }
+
+        label {
+            display: block;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        label i { color: var(--pink); }
+
+        input, select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 3px solid var(--border);
+            font-family: 'Space Mono', monospace;
+            background: white;
+            box-shadow: 4px 4px 0px var(--border);
+            outline: none;
+            transition: 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        input:focus, select:focus {
+            transform: translate(-3px, -3px);
+            box-shadow: 7px 7px 0px var(--secondary);
+            background: #fffdf9;
+        }
+
+        .submit-btn {
+            grid-column: span 3;
+            padding: 22px;
+            background: var(--primary);
+            border: 4px solid var(--border);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 6px 6px 0px var(--border);
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .submit-btn:hover { background: #fff; transform: translate(-4px, -4px); box-shadow: 10px 10px 0px var(--border); }
+
+        /* --- FOOTER SOCIALS --- */
+        .footer-dashboard {
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 4px dashed var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .creator-tag { font-family: 'Space Mono'; font-weight: bold; font-size: 0.9rem; }
+        .creator-tag span { background: var(--pink); color: white; padding: 2px 10px; border: 2px solid #000; }
+
+        .social-row { display: flex; gap: 15px; }
+        .social-icon {
+            width: 45px;
+            height: 45px;
+            background: #fff;
+            border: 3px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            text-decoration: none;
+            box-shadow: 4px 4px 0px var(--border);
+            transition: 0.2s;
+        }
+        .social-icon:hover { transform: translate(-3px, -3px) rotate(10deg); box-shadow: 6px 6px 0px var(--pink); background: var(--pink); color: #fff; }
+
+        /* --- PRIVACY POPUP (Cookie Style) --- */
+        .privacy-popup {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            max-width: 320px;
+            background: var(--primary);
+            border: 4px solid var(--border);
+            box-shadow: 8px 8px 0px var(--border);
+            padding: 20px;
+            z-index: 1000;
+            display: none; /* Managed by GSAP */
+            transform: translateX(-120%);
+        }
+
+        .privacy-popup h4 { font-size: 1rem; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .privacy-popup p { font-family: 'Space Mono'; font-size: 0.75rem; margin-bottom: 15px; line-height: 1.4; }
+        .popup-btns { display: flex; gap: 10px; }
+        .btn-small { padding: 8px 12px; border: 2px solid #000; font-size: 0.7rem; font-weight: bold; cursor: pointer; text-transform: uppercase; background: #fff; text-decoration: none; color: #000; }
+        .btn-small.accept { background: var(--border); color: #fff; }
+
+        /* --- TOKEN GUIDE MODAL --- */
+        .modal-overlay {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
-            z-index: 1;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
-        .container {
-            position: relative;
-            max-width: 800px;
-            width: 90%;
-            margin: 40px auto;
-            background: rgba(8,12,20,0.8);
-            padding: 30px;
-            border-radius: 15px;
-            border: 2px solid rgba(14,224,224,0.3);
-            box-shadow: 0 0 30px rgba(14,224,224,0.1);
-            backdrop-filter: blur(12px);
-            z-index: 2;
-            animation: float 4s ease-in-out infinite;
-            transition: all 0.3s ease;
-        }
-        .container:hover {
-            border-color: var(--primary);
-            box-shadow: var(--neon-glow);
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        h1 {
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 30px;
-            position: relative;
-            padding-bottom: 15px;
-        }
-        h1::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--primary), transparent);
-        }
-        input, select {
+        .modal-overlay.active { display: flex; }
+        
+        .modal-box {
+            background: white;
+            border: 4px solid var(--border);
+            box-shadow: 15px 15px 0px var(--border);
+            max-width: 900px;
             width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            background: rgba(8,12,20,0.6);
-            border: 2px solid rgba(14,224,224,0.3);
-            color: var(--primary);
-            font-family: 'Courier New', monospace;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            letter-spacing: 1px;
+            max-height: 90vh;
+            overflow-y: auto;
         }
-        input::placeholder {
-            color: rgba(14,224,224,0.5);
+        
+        .modal-header {
+            background: var(--primary);
+            padding: 25px;
+            border-bottom: 4px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(14,224,224,0.2);
-            transform: translateY(-2px);
-            background: rgba(8,12,20,0.8);
-        }
-        input:focus, select:focus {
-            outline: none;
-            box-shadow: 0 0 15px rgba(0,255,0,0.3);
-            transform: translateY(-2px);
-        }
-        button {
-            width: 100%;
-            padding: 15px;
-            margin-top: 20px;
-            background: linear-gradient(45deg, rgba(8,12,20,0.8), rgba(14,224,224,0.2));
-            position: relative;
-            z-index: 1;
-            overflow: hidden;
-            transition: all 0.5s;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-            font-family: 'Courier New', monospace;
+        
+        .modal-header h2 {
+            font-size: 1.6rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .close-btn {
+            background: var(--pink);
+            border: 3px solid var(--border);
+            padding: 10px 20px;
+            font-weight: 700;
             cursor: pointer;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            font-size: 1rem;
+            transition: 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+            text-transform: uppercase;
         }
-        button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,255,0,0.1);
-            transform: translate(-50%, -50%) scale(0);
-            transition: transform 0.5s ease;
-            border-radius: 50%;
+        
+        .close-btn:hover {
+            background: var(--border);
+            color: white;
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px var(--pink);
         }
-        button:hover::before {
-            transform: translate(-50%, -50%) scale(2);
+        
+        .modal-body {
+            padding: 35px;
         }
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,255,0,0.2);
+        
+        .info-highlight {
+            background: var(--primary);
+            border: 3px solid var(--border);
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 4px 4px 0px var(--border);
+        }
+        
+        .info-highlight strong {
+            font-size: 1.1rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        .info-highlight p {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .guide-step {
+            margin: 25px 0;
+            padding: 25px;
+            background: var(--bg);
+            border: 3px solid var(--border);
+            box-shadow: 5px 5px 0px var(--border);
+        }
+        
+        .step-num {
+            background: var(--secondary);
+            color: white;
+            width: 45px;
+            height: 45px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--border);
+            font-weight: 700;
+            margin-right: 15px;
+            font-size: 1.3rem;
+            box-shadow: 3px 3px 0px var(--border);
+        }
+        
+        .guide-step h3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .guide-step p {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin-left: 60px;
+        }
+        
+        .guide-step code {
+            background: white;
+            border: 2px solid var(--border);
+            padding: 3px 10px;
+            font-weight: 700;
+            color: var(--pink);
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 1024px) {
+            .form-grid { grid-template-columns: 1fr 1fr; }
+            .double-width, .submit-btn, .full-width { grid-column: span 2; }
+        }
+
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .double-width, .submit-btn, .full-width { grid-column: span 1; }
+            .header { flex-direction: column; text-align: center; gap: 15px; }
+            .sticker, .privacy-popup { display: none !important; }
+            .modal-box { max-width: 95%; max-height: 95vh; }
+            .modal-body { padding: 20px 15px; }
+            .guide-step { padding: 18px; }
+            .guide-step p { margin-left: 0; margin-top: 12px; }
+            .modal-header h2 { font-size: 1.2rem; }
+            .submit-btn { padding: 15px; font-size: 0.9rem; gap: 8px; }
         }
     </style>
 </head>
 <body>
-    <canvas class="matrix-rain" id="matrix"></canvas>
-    <div id="security-banner" class="security-banner">
-        <div class="banner-content">
-            <h2>🔒 Your Security Matters</h2>
-            <div class="security-points">
-                <p>✓ Encrypted tokens & data</p>
-                <p>✓ Auto-cleanup on expiry</p>
-                <p>✓ Enterprise-grade security</p>
-            </div>
-            <button onclick="hideBanner()" class="ok-button">I Understand</button>
+
+    <!-- MARQUEE BANNER -->
+    <div class="marquee-top">
+        <div class="marquee-track">
+            🚀 KXSHARE IS NOW OPENSOURCE! ANYONE CAN CONTRIBUTE • CONTRIBUTE ON GITHUB • SECURE REPOSITORY SHARING • AUTO-DELETION PROTOCOL ENABLED • PRIVACY FIRST • 🚀
         </div>
     </div>
-    <div class="container" style="display: none">
-        <h1>Secure Repo Share</h1>
-        <form method="POST">
-            <input type="text" name="token" placeholder="GitHub Personal Access Token" required>
-            <input type="text" name="repo_url" placeholder="Repository URL (e.g., https://github.com/owner/repo)" required>
-            <select name="expiry_days">
-                <option value="1">1 Day</option>
-                <option value="7">7 Days</option>
-                <option value="30">30 Days</option>
-            </select>
-            <div class="password-protection">
-                <input type="password" name="protection_password" placeholder="Password Protection (Optional)" class="optional-field">
-                <div class="hint">Leave empty for no password protection</div>
+
+    <div class="page-wrapper">
+        <!-- STICKERS -->
+        <div class="sticker s-1">AES-256 ENCRYPTED</div>
+        <div class="sticker s-2">OPENSOURCE v3.0</div>
+
+        <!-- MAIN DASHBOARD -->
+        <main class="dashboard-container" id="mainDashboard">
+            
+            <header class="header">
+                <div class="brand">
+                    <h1>Kx<span>SHARE</span></h1>
+                    <p style="font-family: 'Space Mono'; font-size: 0.75rem; margin-top: 8px;">// TERMINAL_ACCESS_CONNECTED</p>
+                </div>
+                <div class="header-actions">
+                    <button onclick="openTokenGuide()" class="btn-mini" style="cursor: pointer;"><i class="fas fa-terminal"></i> Get Token</button>
+                </div>
+            </header>
+
+            <form method="POST">
+                <div class="form-grid">
+                    <!-- GitHub Token -->
+                    <div class="form-group double-width">
+                        <label><i class="fas fa-key"></i> GitHub Access Token</label>
+                        <input type="password" name="token" placeholder="ghp_xxxxxxxxxxxx" value="{{ saved_token }}" required>
+                        <div style="margin-top: 12px; display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" name="save_token" value="yes" id="saveToken" {% if saved_token %}checked{% endif %} style="width: 22px; height: 22px; cursor: pointer;">
+                            <label for="saveToken" style="margin: 0; font-weight: normal; cursor: pointer; text-transform: none;">Remember Token (Encrypted Session)</label>
+                        </div>
+                    </div>
+
+                    <!-- Expiry -->
+                    <div class="form-group">
+                        <label><i class="fas fa-hourglass-half"></i> Link Expiry</label>
+                        <select name="expiry_days">
+                            <option value="1">1 Day</option>
+                            <option value="7" selected>7 Days</option>
+                            <option value="30">30 Days</option>
+                        </select>
+                    </div>
+
+                    <!-- Repo URL -->
+                    <div class="form-group double-width">
+                        <label><i class="fab fa-github"></i> Repository URL</label>
+                        <input type="text" name="repo_url" placeholder="https://github.com/owner/repo" required>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Pass-Protection</label>
+                        <input type="password" name="protection_password" placeholder="Optional Password">
+                    </div>
+
+                    <!-- SUBMIT -->
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <i class="fas fa-rocket"></i> GENERATE SECURE LINK
+                    </button>
+                </div>
+            </form>
+
+            <div class="footer-dashboard">
+                <div class="creator-tag">CREATED BY <span>KARANNKX</span></div>
+                <div class="social-row">
+                    <a href="https://github.com/Karannkx" class="social-icon" target="_blank"><i class="fab fa-github"></i></a>
+                    <a href="https://linkedin.com/in/Karannkx" class="social-icon" target="_blank"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://instagram.com/Karannkx" class="social-icon" target="_blank"><i class="fab fa-instagram"></i></a>
+                </div>
             </div>
-            <button type="submit">Generate Share Link</button>
-            <style>
-                .password-protection {
-                    position: relative;
-                    margin: 10px 0;
-                }
-                .hint {
-                    font-size: 0.8em;
-                    color: rgba(14,224,224,0.6);
-                    margin-top: 5px;
-                }
-                .optional-field {
-                    opacity: 0.8;
-                }
-                .optional-field:focus {
-                    opacity: 1;
-                }
-            </style>
-        </form>
+        </main>
     </div>
-    <style>
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
-        }
-        .glitch-effect {
-            animation: glitch 0.3s infinite;
-            animation-play-state: paused;
-        }
-        .container:hover .glitch-effect {
-            animation-play-state: running;
-        }
-        input:focus, select:focus {
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0% { border-color: var(--primary); }
-            50% { border-color: var(--secondary); }
-            100% { border-color: var(--primary); }
-        }
-    </style>
+
+    <!-- PRIVACY POPUP -->
+    <div class="privacy-popup" id="privacyPopup">
+        <h4><i class="fas fa-shield-alt"></i> Privacy Guard</h4>
+        <p>Tokens are AES-256 encrypted and auto-deleted upon link expiry. No repository content is ever stored on our servers.</p>
+        <div class="popup-btns">
+            <button class="btn-small accept" onclick="closePopup()">I Trust It</button>
+            <a href="/privacy-policy" class="btn-small">Read More</a>
+        </div>
+    </div>
+
+    <footer style="text-align: center; padding: 15px; font-family: 'Space Mono'; font-size: 0.7rem; opacity: 0.5;">
+        // KXSHARE_SECURE_ENDPOINT_2025 //
+    </footer>
+    
+    <!-- Token Guide Modal -->
+    <div class="modal-overlay" id="tokenModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2><i class="fas fa-graduation-cap"></i> How to Get GitHub Token</h2>
+                <button onclick="closeTokenGuide()" class="close-btn">✕ CLOSE</button>
+            </div>
+            <div class="modal-body">
+                <div class="info-highlight">
+                    <strong><i class="fas fa-lightbulb"></i> Why do I need a token?</strong>
+                    <p>GitHub tokens allow secure access to private repositories. Your token is encrypted with AES-256 and never stored in plain text.</p>
+                </div>
+
+                <div class="guide-step">
+                    <h3><span class="step-num">1</span> Go to GitHub Settings</h3>
+                    <p>• Click your profile picture in the top-right corner<br>
+                    • Select <strong>Settings</strong> from the dropdown menu</p>
+                </div>
+                
+                <div class="guide-step">
+                    <h3><span class="step-num">2</span> Open Developer Settings</h3>
+                    <p>• Scroll down to the bottom of the left sidebar<br>
+                    • Click <strong>Developer settings</strong> (last option)</p>
+                </div>
+                
+                <div class="guide-step">
+                    <h3><span class="step-num">3</span> Generate Personal Access Token</h3>
+                    <p>• Click <strong>Personal access tokens</strong> in the left menu<br>
+                    • Select <strong>Tokens (classic)</strong><br>
+                    • Click <strong>Generate new token (classic)</strong> button</p>
+                </div>
+                
+                <div class="guide-step">
+                    <h3><span class="step-num">4</span> Configure Token Permissions</h3>
+                    <p>• Give a descriptive name (e.g., "KxShare Access")<br>
+                    • Set expiration as needed (recommended: 90 days)<br>
+                    • Select <strong>ALL scopes/permissions</strong><br>
+                    • Most important: <code>repo</code>, <code>read:org</code>, <code>user</code><br>
+                    • Scroll down and click <strong>Generate token</strong></p>
+                </div>
+                
+                <div class="guide-step">
+                    <h3><span class="step-num">5</span> Copy & Use Token</h3>
+                    <p>• Copy the generated token (starts with <code>ghp_</code>)<br>
+                    • <strong>⚠️ IMPORTANT:</strong> Save it somewhere safe - you won't see it again!<br>
+                    • Paste it in the KxShare form above<br>
+                    • Enable "Remember Token" option for future use</p>
+                </div>
+
+                <div class="info-highlight" style="background: #ffe6e6; border-color: var(--pink);">
+                    <strong><i class="fas fa-shield-alt"></i> Security Tips</strong>
+                    <p style="text-align: left; margin-top: 10px;">
+                        • Never share your token publicly<br>
+                        • Rotate tokens every 90 days<br>
+                        • Only grant necessary permissions<br>
+                        • KxShare encrypts your token end-to-end
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        const canvas = document.getElementById('matrix');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        const characters = "01";
-        const fontSize = 14;
-        const columns = canvas.width/fontSize;
-        const drops = [];
-        for(let x = 0; x < columns; x++) drops[x] = 1;
-        function draw() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#0fe0e0';
-            ctx.font = fontSize + 'px monospace';
-            for(let i = 0; i < drops.length; i++) {
-                const text = characters.charAt(Math.floor(Math.random() * characters.length));
-                ctx.fillText(text, i*fontSize, drops[i]*fontSize);
-                if(drops[i]*fontSize > canvas.height && Math.random() > 0.975)
-                    drops[i] = 0;
-                drops[i]++;
-            }
-        }
-        setInterval(draw, 16);
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+        document.addEventListener('DOMContentLoaded', () => {
+            const tl = gsap.timeline();
+
+            // 1. Dashboard Animation
+            tl.from("#mainDashboard", {
+                duration: 0.8,
+                y: 50,
+                opacity: 0,
+                ease: "power3.out"
+            });
+
+            // 2. Stickers Animation
+            tl.from(".sticker", {
+                duration: 0.5,
+                scale: 0,
+                stagger: 0.2,
+                ease: "back.out(1.7)"
+            }, "-=0.3");
+
+            // 3. Privacy Popup Entrance (Delayed)
+            gsap.to("#privacyPopup", {
+                display: "block",
+                x: 0,
+                duration: 0.8,
+                delay: 2,
+                ease: "elastic.out(1, 0.75)"
+            });
+
+            // Floating Effect
+            gsap.to(".sticker", {
+                y: 10,
+                duration: 2,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut",
+                stagger: 0.4
+            });
         });
-    </script>
-    <style>
-        .security-banner {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(8,12,20,0.95);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            backdrop-filter: blur(8px);
+
+        function closePopup() {
+            gsap.to("#privacyPopup", {
+                x: -400,
+                duration: 0.5,
+                ease: "power3.in",
+                onComplete: () => document.getElementById('privacyPopup').style.display = 'none'
+            });
         }
-        .banner-content {
-            background: rgba(14,224,224,0.1);
-            padding: 2rem;
-            border-radius: 15px;
-            border: 2px solid var(--primary);
-            max-width: 600px;
-            width: 90%;
-            text-align: center;
-            animation: fadeIn 0.5s ease-out;
-            box-shadow: 0 0 30px rgba(14,224,224,0.2);
+        
+        // Token Guide Modal
+        function openTokenGuide() {
+            document.getElementById('tokenModal').classList.add('active');
+            gsap.from('.modal-box', {
+                scale: 0.8,
+                opacity: 0,
+                duration: 0.4,
+                ease: "back.out(1.7)"
+            });
         }
-        .banner-content h2 {
-            color: var(--primary);
-            margin-bottom: 1.5rem;
-            font-size: 1.8rem;
+        
+        function closeTokenGuide() {
+            const modal = document.getElementById('tokenModal');
+            gsap.to('.modal-box', {
+                scale: 0.8,
+                opacity: 0,
+                duration: 0.3,
+                ease: "power2.in",
+                onComplete: () => modal.classList.remove('active')
+            });
         }
-        .security-points {
-            text-align: left;
-            margin: 1.5rem 0;
-        }
-        .security-points p {
-            margin: 1rem 0;
-            color: var(--primary);
-            font-size: 1.1rem;
-            opacity: 0;
-            animation: slideIn 0.5s ease-out forwards;
-        }
-        .security-points p:nth-child(1) { animation-delay: 0.2s; }
-        .security-points p:nth-child(2) { animation-delay: 0.4s; }
-        .security-points p:nth-child(3) { animation-delay: 0.6s; }
-        .security-points p:nth-child(4) { animation-delay: 0.8s; }
-        .ok-button {
-            background: var(--primary);
-            color: var(--bg);
-            padding: 1rem 3rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-top: 1rem;
-            opacity: 0;
-            animation: fadeIn 0.5s ease-out 1s forwards;
-        }
-        .ok-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(14,224,224,0.3);
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-    </style>
-    <script>
-        function hideBanner() {
-            document.getElementById('security-banner').style.display = 'none';
-            document.querySelector('.container').style.display = 'block';
-        }
+        
+        // Close on outside click
+        document.getElementById('tokenModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeTokenGuide();
+            }
+        });
     </script>
 </body>
 </html>

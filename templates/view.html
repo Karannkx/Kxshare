@@ -1,219 +1,396 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>{{ owner }}/{{ repo }}</title>
+    <title>{{ owner }}/{{ repo }} - KxShare Viewer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- GSAP for Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
-            --primary: #0fe0e0;
-            --secondary: #ff2975;
-            --accent: #7928ff;
-            --bg: #080c14;
-            --text: #e0e0e0;
+            --primary: #ffd93d;   /* Yellow */
+            --secondary: #66d9ef; /* Cyan */
+            --pink: #ff6b9d;      /* Pink */
+            --green: #a8e6cf;     /* Green */
+            --bg: #f5f0e6;        /* Vintage Paper */
+            --border: #000000;
+            --card-bg: #ffffff;
+            --shadow: 8px 8px 0px #000;
         }
-        body { 
-            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg); border-left: 2px solid var(--border); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border: 2px solid var(--bg); }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
             background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
+            background-image: radial-gradient(var(--border) 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: var(--border);
             padding: 20px;
             min-height: 100vh;
             overflow-x: hidden;
-            line-height: 1.6;
         }
-        .matrix-rain {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-            opacity: 0.5;
-        }
+
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
-            background: rgba(8,12,20,0.95);
-            padding: 2rem;
-            border-radius: 12px;
-            border: 1px solid rgba(14,224,224,0.2);
-            box-shadow: 0 0 30px rgba(14,224,224,0.1);
-            animation: fadeIn 0.5s ease-out;
-        }
-        h1, h2 { 
-            font-weight: 600;
-            letter-spacing: -0.5px;
-            color: var(--primary);
-            padding-bottom: 1rem;
-            margin: 1.5rem 0;
-            border-bottom: 1px solid rgba(14,224,224,0.2);
-        }
-        h1 {
-            font-size: 2rem;
-            word-break: break-word;
-        }
-        .readme-content {
-            background: rgba(8,12,20,0.6);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-        }
-        .file-tree {
-            background: rgba(8,12,20,0.6);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 1.5rem 0;
-        }
-        .file-tree ul {
-            list-style: none;
-            padding-left: 1.5rem;
-        }
-        .file-tree > ul {
-            padding-left: 0;
-        }
-        .file-item {
-            padding: 0.75rem;
-            margin: 0.5rem 0;
-            border-radius: 6px;
-            background: rgba(14,224,224,0.05);
-            border: 1px solid rgba(14,224,224,0.1);
-            transition: all 0.2s ease;
             display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* --- HEADER (With AI Button) --- */
+        .header {
+            background: var(--primary);
+            border: 4px solid var(--border);
+            box-shadow: var(--shadow);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 0.75rem;
+            position: relative;
         }
-        .file-item:hover {
-            background: rgba(14,224,224,0.1);
-            transform: translateX(4px);
-            border-color: rgba(14,224,224,0.3);
-        }
-        .file-icon {
-            color: var(--primary);
-            font-size: 1.2rem;
-        }
-        .file-name {
-            flex: 1;
-            font-size: 0.95rem;
-            word-break: break-word;
-        }
-        .file-type {
-            font-size: 0.8rem;
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            background: rgba(14,224,224,0.1);
-            color: var(--primary);
-        }
-        .download-btn {
+
+        .header h1 { font-size: 1.4rem; text-transform: uppercase; word-break: break-all; display: flex; align-items: center; gap: 10px; }
+
+        .header-actions { display: flex; gap: 15px; align-items: center; }
+
+        /* AI Button in Header */
+        .ai-btn {
+            background: var(--pink);
+            border: 3px solid var(--border);
+            padding: 10px 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px var(--border);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            color: var(--primary);
+            gap: 8px;
+            transition: 0.1s;
+        }
+        .ai-btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px var(--border); background: #fff; }
+        .ai-btn.loading .spinner { display: inline-block; animation: spin 1s linear infinite; }
+        .ai-btn .spinner { display: none; }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* --- DASHBOARD GRID --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 20px;
+        }
+
+        .section {
+            background: var(--card-bg);
+            border: 4px solid var(--border);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+            overflow: hidden;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            text-transform: uppercase;
+            padding: 15px 20px;
+            border-bottom: 4px solid var(--border);
+            background: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+        }
+
+        .scroll-area { flex: 1; overflow-y: auto; padding: 25px; background: #fffdf9; }
+
+        /* README Content styling */
+        .readme-content { font-family: 'Space Mono', monospace; line-height: 1.7; font-size: 0.9rem; }
+        .readme-content h1, .readme-content h2 { margin-bottom: 15px; border-bottom: 2px solid #ddd; padding-bottom: 5px; }
+
+        /* --- AI EDITOR MODAL --- */
+        .ai-editor {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 90%;
+            max-width: 800px;
+            background: #1e1e1e;
+            border: 4px solid var(--border);
+            box-shadow: 20px 20px 0px rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+        }
+        .ai-editor.active { display: block; }
+        .ai-editor-header {
+            background: #333;
+            padding: 12px 20px;
+            border-bottom: 2px solid #444;
+            display: flex;
+            justify-content: space-between;
+            color: #fff;
+            font-family: 'Space Mono';
+            font-size: 0.8rem;
+        }
+        .ai-editor-content {
+            padding: 25px;
+            color: #00ff41; /* Matrix green */
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            max-height: 70vh;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        /* --- FILE TREE --- */
+        .file-tree ul { list-style: none; padding-left: 0; }
+        .file-tree ul ul { padding-left: 15px; border-left: 2px dashed #ccc; margin-left: 10px; }
+        .file-item {
+            padding: 8px 12px;
+            margin: 5px 0;
+            background: white;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            box-shadow: 3px 3px 0px var(--border);
+        }
+        .file-name { flex: 1; font-family: 'Space Mono', monospace; font-weight: bold; overflow: hidden; text-overflow: ellipsis; }
+
+        /* --- DOWNLOAD AREA --- */
+        .footer-action {
+            background: var(--green);
+            border: 4px solid var(--border);
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-top: 10px;
+        }
+        .download-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px; }
+        
+        .download-btn {
+            display: flex;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: var(--pink);
+            border: 3px solid var(--border);
+            font-weight: 700;
+            text-transform: uppercase;
             text-decoration: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            border: 1px solid rgba(14,224,224,0.3);
-            background: rgba(14,224,224,0.05);
-            transition: all 0.2s ease;
-            font-size: 0.95rem;
+            color: var(--border);
+            box-shadow: 6px 6px 0px var(--border);
+            transition: 0.1s;
         }
-        .download-btn:hover {
-            background: rgba(14,224,224,0.1);
-            border-color: var(--primary);
+        .download-btn:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0px var(--border); }
+
+        .wget-section { background: #2d2d2d; border: 3px solid var(--border); padding: 15px; box-shadow: 4px 4px 0px var(--border); color: #fff; }
+        .wget-command {
+            background: #000;
+            padding: 12px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #444;
         }
-        @media (max-width: 768px) {
-            body {
-                padding: 1rem;
-            }
-            .container {
-                padding: 1rem;
-            }
-            h1 {
-                font-size: 1.5rem;
-            }
-            .file-tree {
-                padding: 1rem;
-            }
-            .file-item {
-                padding: 0.5rem;
-                font-size: 0.9rem;
-            }
+        .copy-btn { background: var(--secondary); border: 2px solid var(--border); padding: 5px 15px; cursor: pointer; font-weight: bold; }
+
+        /* Overlay for AI Editor */
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 999; display: none; backdrop-filter: blur(4px); }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 900px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .download-grid { grid-template-columns: 1fr; }
+            .section { height: 450px; }
         }
-        @keyframes fadeIn {
-            from { 
-                opacity: 0; 
-                transform: translateY(10px); 
-            }
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
-            }
+
+        @media (max-width: 600px) {
+            .header { flex-direction: column; text-align: center; gap: 15px; }
+            .header-actions { width: 100%; }
+            .ai-btn { width: 100%; justify-content: center; }
+            h1 { font-size: 1.1rem; }
         }
     </style>
 </head>
 <body>
+
+    <div class="overlay" id="overlay"></div>
+
     <div class="container">
-        <h1>{{ owner }}/{{ repo }}</h1>
-        <h2>README</h2>
-        <div class="readme-content">{{ readme_content | safe }}</div>
-        <h2>Repository Structure</h2>
-        <div class="file-tree">
-            {% macro render_files(files) %}
-            <ul>
-                {% for file in files %}
-                    <li>
-                        <div class="file-item">
-                            <span class="file-icon">{{ '📁' if file.type == 'dir' else '📄' }}</span>
-                            <span class="file-name">{{ file.name }}</span>
-                            <span class="file-type">{{ file.type }}</span>
-                        </div>
-                        {% if file.type == 'dir' and file.children %}
-                            {{ render_files(file.children) }}
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-            {% endmacro %}
-            {{ render_files(files) }}
+        <!-- Header -->
+        <header class="header">
+            <h1><i class="fab fa-github"></i> {{ owner }}/{{ repo }}</h1>
+            
+            <div class="header-actions">
+                {% if has_gemini %}
+                <button onclick="generateAIReadme()" class="ai-btn" id="aiBtn">
+                    <i class="fas fa-robot"></i>
+                    <i class="fas fa-spinner spinner"></i>
+                    <span>AI Analysis</span>
+                </button>
+                {% endif %}
+                <div style="font-family: 'Space Mono'; font-weight: bold; background: #000; color: #fff; padding: 5px 10px; font-size: 0.7rem;">v1.0_SECURE</div>
+            </div>
+        </header>
+        
+        <div class="dashboard-grid">
+            <!-- README Section -->
+            <div class="section" id="readmeSection">
+                <div class="section-title"><i class="fas fa-book"></i> README.md</div>
+                <div class="scroll-area">
+                    <div class="readme-content">
+                        {{ readme_content | safe }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Structure Section -->
+            <div class="section" id="structureSection">
+                <div class="section-title"><i class="fas fa-folder-tree"></i> REPO_STRUCTURE</div>
+                <div class="scroll-area">
+                    <div class="file-tree">
+                        {% macro render_files(files) %}
+                        <ul>
+                            {% for file in files %}
+                                <li>
+                                    <div class="file-item">
+                                        <span class="file-icon">
+                                            {% if file.type == 'dir' %}
+                                                <i class="fas fa-folder" style="color: var(--primary);"></i>
+                                            {% else %}
+                                                <i class="fas fa-file-code" style="color: var(--secondary);"></i>
+                                            {% endif %}
+                                        </span>
+                                        <span class="file-name">{{ file.name }}</span>
+                                        <span style="font-size: 0.6rem; opacity: 0.6;">{{ file.type }}</span>
+                                    </div>
+                                    {% if file.type == 'dir' and file.children %}
+                                        {{ render_files(file.children) }}
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        {% endmacro %}
+                        {{ render_files(files) }}
+                    </div>
+                </div>
+            </div>
         </div>
-        <a href="{{ url_for('download_repo', share_id=share_id) }}" class="download-btn">
-            <span>⬇️</span> Download ZIP
-        </a>
+
+        <!-- AI Editor Window (Hidden by default) -->
+        <div class="ai-editor" id="aiEditor">
+            <div class="ai-editor-header">
+                <span><i class="fas fa-terminal"></i> GEMINI_AI_PROCESSOR</span>
+                <button onclick="closeAIEditor()" style="background:none; color:white; border:none; cursor:pointer;"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="ai-editor-content" id="aiContent">
+                // System Initializing...
+            </div>
+            <div style="padding: 10px; background: #333; text-align: right;">
+                <button class="copy-btn" onclick="copyAIResult()">Copy Analysis</button>
+            </div>
+        </div>
+        
+        <!-- Footer Actions -->
+        <div class="footer-action" id="footerAction">
+            <div class="download-grid">
+                <a href="{{ url_for('download_repo', share_id=share_id) }}" class="download-btn">
+                    <i class="fas fa-file-zipper fa-2x" style="margin-right:15px"></i>
+                    DOWNLOAD ZIP
+                </a>
+                
+                <div class="wget-section">
+                    <div style="font-weight: bold; font-size: 0.8rem; color: var(--primary);">TERMINAL_COMMAND:</div>
+                    <div class="wget-command">
+                        <code id="wgetCmd">wget {{ request.url_root }}download/{{ share_id }} -O {{ repo }}.zip</code>
+                        <button onclick="copyWget()" class="copy-btn" id="copyBtn">COPY</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <canvas class="matrix-rain" id="matrix"></canvas>
+    
     <script>
-        const canvas = document.getElementById('matrix');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        const characters = "01";
-        const fontSize = 14;
-        const columns = canvas.width/fontSize;
-        const drops = [];
-        for(let x = 0; x < columns; x++) drops[x] = 1;
-        function draw() {
-            requestAnimationFrame(draw);
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#0fe0e0';
-            ctx.font = fontSize + 'px monospace';
-            for(let i = 0; i < drops.length; i++) {
-                const text = characters.charAt(Math.floor(Math.random() * characters.length));
-                ctx.fillText(text, i*fontSize, drops[i]*fontSize);
-                if(drops[i]*fontSize > canvas.height && Math.random() > 0.975)
-                    drops[i] = 0;
-                drops[i]++;
+        // GSAP Entrance Animations
+        window.addEventListener('DOMContentLoaded', () => {
+            gsap.from(".header", { y: -50, opacity: 0, duration: 0.8, ease: "power3.out" });
+            gsap.from("#readmeSection", { x: -100, opacity: 0, duration: 1, delay: 0.2, ease: "back.out(1.2)" });
+            gsap.from("#structureSection", { x: 100, opacity: 0, duration: 1, delay: 0.4, ease: "back.out(1.2)" });
+            gsap.from("#footerAction", { y: 50, opacity: 0, duration: 0.8, delay: 0.6 });
+        });
+
+        async function generateAIReadme() {
+            const btn = document.getElementById('aiBtn');
+            const editor = document.getElementById('aiEditor');
+            const overlay = document.getElementById('overlay');
+            const content = document.getElementById('aiContent');
+            
+            btn.disabled = true;
+            btn.classList.add('loading');
+            
+            // Show Modal with Animation
+            overlay.style.display = 'block';
+            editor.classList.add('active');
+            gsap.to(editor, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.7)" });
+            content.textContent = '// AI is analyzing the repository structure...\n// Connecting to the AI Model...';
+            
+            try {
+                const response = await fetch('/generate-ai-readme/{{ share_id }}');
+                const data = await response.json();
+                
+                if (data.success) {
+                    content.innerHTML = data.readme;
+                } else {
+                    content.textContent = '// ERROR: Access Denied. ' + (data.error || 'Failed to fetch.');
+                }
+            } catch (error) {
+                content.textContent = '// ERROR: Connection Refused. ' + error.message;
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('loading');
             }
         }
-        requestAnimationFrame(function animate() {
-            draw();
-            requestAnimationFrame(animate);
-        });
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
+        
+        function closeAIEditor() {
+            const editor = document.getElementById('aiEditor');
+            const overlay = document.getElementById('overlay');
+            gsap.to(editor, { opacity: 0, scale: 0.9, duration: 0.3, onComplete: () => {
+                editor.classList.remove('active');
+                overlay.style.display = 'none';
+            }});
+        }
+        
+        function copyWget() {
+            const code = document.getElementById('wgetCmd').textContent;
+            const btn = document.getElementById('copyBtn');
+            navigator.clipboard.writeText(code).then(() => {
+                btn.innerHTML = 'DONE!';
+                setTimeout(() => btn.innerHTML = 'COPY', 2000);
+            });
+        }
+
+        function copyAIResult() {
+            const content = document.getElementById('aiContent').innerText;
+            navigator.clipboard.writeText(content).then(() => alert('AI Analysis Copied!'));
+        }
     </script>
 </body>
 </html>

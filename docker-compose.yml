@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: kxshare_mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: kxshare_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - kxshare_network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  kxshare_app:
+    build: .
+    container_name: kxshare_app
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - SECRET_KEY=${SECRET_KEY:-your_super_secret_key_change_this}
+      - MONGO_URI=mongodb://mongodb:27017/
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - kxshare_network
+    volumes:
+      - ./static:/app/static
+      - ./templates:/app/templates
+
+networks:
+  kxshare_network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+    driver: local
