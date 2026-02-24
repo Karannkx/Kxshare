@@ -2,7 +2,6 @@
 
 > **Share private GitHub repositories securely with encrypted tokens, password protection, QR codes, and AI-powered README generation.**
 
-[![Live Demo](https://img.shields.io/badge/Demo-Live-success?style=for-the-badge&logo=render)](https://kxshare.onrender.com)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 [![MongoDB](https://img.shields.io/badge/Database-MongoDB-green?style=for-the-badge&logo=mongodb)](https://www.mongodb.com/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue?style=for-the-badge&logo=docker)](https://www.docker.com/)
@@ -330,16 +329,6 @@ Contributions welcome! This project is **open source**.
 - Rate limiting
 - Email notifications
 - Custom link aliases
-
----
-
-## 🎥 Demo
-
-Watch KXShare in action:
-
-[![Watch Demo](https://img.youtube.com/vi/JdDakuW75KY/hqdefault.jpg)](https://youtube.com/shorts/JdDakuW75KY?feature=share)
-
-**Live Demo:** [https://kxshare.onrender.com](https://kxshare.onrender.com)
 
 ---
 
