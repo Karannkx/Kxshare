@@ -58,7 +58,7 @@
             position: relative;
         }
 
-        .header h1 { font-size: 1.4rem; text-transform: uppercase; word-break: break-all; display: flex; align-items: center; gap: 10px; }
+        .header h1 { font-size: 1.4rem; text-transform: uppercase; word-break: break-all; display: flex; align-items: center; gap: 10px; min-width: 0; overflow: hidden; text-overflow: ellipsis; flex: 1; }
 
         .header-actions { display: flex; gap: 15px; align-items: center; }
 
@@ -113,7 +113,14 @@
             font-weight: bold;
         }
 
-        .scroll-area { flex: 1; overflow-y: auto; padding: 25px; background: #fffdf9; }
+        .scroll-area { 
+            flex: 1; 
+            overflow-y: auto; 
+            padding: 25px; 
+            background: #fffdf9;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+        }
 
         /* README Content styling */
         .readme-content { font-family: 'Space Mono', monospace; line-height: 1.7; font-size: 0.9rem; }
@@ -126,33 +133,87 @@
             left: 50%;
             transform: translate(-50%, -50%) scale(0.9);
             width: 90%;
-            max-width: 800px;
-            background: #1e1e1e;
+            max-width: 900px;
+            max-height: 90vh;
+            background: #ffffff;
             border: 4px solid var(--border);
             box-shadow: 20px 20px 0px rgba(0,0,0,0.5);
             z-index: 1000;
             display: none;
             opacity: 0;
+            overflow: hidden;
+            flex-direction: column;
         }
-        .ai-editor.active { display: block; }
+        .ai-editor.active { display: flex; }
         .ai-editor-header {
-            background: #333;
-            padding: 12px 20px;
-            border-bottom: 2px solid #444;
+            background: var(--primary);
+            padding: 15px 20px;
+            border-bottom: 4px solid var(--border);
             display: flex;
             justify-content: space-between;
-            color: #fff;
-            font-family: 'Space Mono';
-            font-size: 0.8rem;
+            align-items: center;
+            color: var(--border);
+            font-family: 'Space Grotesk';
+            font-size: 0.9rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .ai-editor-header button {
+            background: var(--pink);
+            color: var(--border);
+            border: 2px solid var(--border);
+            cursor: pointer;
+            padding: 8px 12px;
+            font-weight: 700;
+            box-shadow: 3px 3px 0px var(--border);
+            transition: 0.1s;
+        }
+        .ai-editor-header button:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0px var(--border);
         }
         .ai-editor-content {
             padding: 25px;
-            color: #00ff41; /* Matrix green */
-            font-family: 'Consolas', monospace;
+            color: var(--border);
+            background: #fffdf9;
+            font-family: 'Space Mono', monospace;
             font-size: 0.9rem;
-            max-height: 70vh;
             overflow-y: auto;
             white-space: pre-wrap;
+            line-height: 1.6;
+            flex: 1;
+        }
+        .ai-editor-content.loading {
+            overflow: hidden;
+        }
+        .ai-editor-footer {
+            padding: 15px 20px;
+            background: var(--secondary);
+            border-top: 4px solid var(--border);
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            flex-shrink: 0;
+        }
+        .ai-editor-footer button {
+            background: var(--border);
+            color: #fff;
+            border: 3px solid var(--border);
+            padding: 10px 20px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Space Grotesk';
+            text-transform: uppercase;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.3);
+            transition: 0.1s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ai-editor-footer button:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.3);
+            background: #333;
         }
 
         /* --- FILE TREE --- */
@@ -352,7 +413,19 @@
         .copy-btn { background: var(--secondary); border: 2px solid var(--border); padding: 5px 15px; cursor: pointer; font-weight: bold; white-space: nowrap; }
 
         /* Overlay for AI Editor */
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 999; display: none; backdrop-filter: blur(4px); }
+        .overlay { 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0,0,0,0.7); 
+            z-index: 999; 
+            display: none; 
+            backdrop-filter: blur(4px);
+            pointer-events: none;
+        }
+        .overlay.active {
+            display: block;
+            pointer-events: auto;
+        }
 
         /* --- RESPONSIVE --- */
         @media (max-width: 900px) {
@@ -362,10 +435,13 @@
         }
 
         @media (max-width: 600px) {
-            .header { flex-direction: column; text-align: center; gap: 15px; }
-            .header-actions { width: 100%; }
-            .ai-btn { width: 100%; justify-content: center; }
-            h1 { font-size: 1.1rem; }
+            .header { padding: 12px 15px; gap: 10px; }
+            .header h1 { font-size: 0.75rem; gap: 6px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+            .header h1 i { font-size: 0.85rem; flex-shrink: 0; }
+            .header-actions { gap: 8px; flex-shrink: 0; }
+            .ai-btn { padding: 7px 12px; font-size: 0.7rem; gap: 5px; }
+            .ai-btn span { display: none; }
+            .header-actions > div { padding: 3px 6px; font-size: 0.55rem; }
             
             .footer-action { padding: 15px; }
             .download-grid { gap: 15px; }
@@ -442,10 +518,201 @@
 
         @media (max-width: 600px) {
             .toast { right: 15px; top: 15px; padding: 15px 20px; font-size: 0.9rem; }
+            
+            /* AI Editor Mobile */
+            .ai-editor {
+                width: 95%;
+                max-height: 85vh;
+                box-shadow: 10px 10px 0px rgba(0,0,0,0.5);
+            }
+            .ai-editor-header {
+                padding: 12px 15px;
+                font-size: 0.75rem;
+            }
+            .ai-editor-content {
+                padding: 15px;
+                font-size: 0.8rem;
+            }
+            .ai-editor-footer {
+                padding: 12px 15px;
+                flex-direction: column;
+            }
+            .ai-editor-footer button {
+                width: 100%;
+                justify-content: center;
+                padding: 12px 15px;
+            }
+        }
+
+        /* --- PAGE LOADER --- */
+        .page-loader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            background-image: radial-gradient(var(--border) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+        .page-loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loader-box {
+            background: var(--primary);
+            border: 5px solid var(--border);
+            box-shadow: 12px 12px 0px var(--border);
+            padding: 40px 50px;
+            text-align: center;
+            animation: loaderPulse 2s ease-in-out infinite;
+        }
+        @keyframes loaderPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .loader-spinner {
+            width: 80px;
+            height: 80px;
+            border: 8px solid var(--border);
+            border-top-color: var(--pink);
+            border-right-color: var(--secondary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 25px;
+        }
+        .loader-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            color: var(--border);
+            margin-bottom: 10px;
+        }
+        .loader-subtext {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--border);
+            opacity: 0.7;
+        }
+
+        /* --- AI ANALYSIS LOADER --- */
+        .ai-loader {
+            padding: 60px 40px;
+            text-align: center;
+            background: linear-gradient(135deg, #fffdf9 0%, #fff9e6 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            overflow: hidden;
+        }
+        .ai-loader.hidden { display: none; }
+        .ai-loader-spinner {
+            width: 80px;
+            height: 80px;
+            border: 8px solid transparent;
+            border-top-color: var(--pink);
+            border-right-color: var(--secondary);
+            border-bottom-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+            margin: 0 auto 30px;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.3);
+            position: relative;
+        }
+        .ai-loader-spinner::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border);
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1.2s linear infinite reverse;
+        }
+        .ai-loader-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 800;
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            color: var(--border);
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        .ai-loader-subtext {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--border);
+            opacity: 0.7;
+            font-weight: 500;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+        #aiResult {
+            padding: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .loader-box {
+                padding: 30px 35px;
+                box-shadow: 8px 8px 0px var(--border);
+            }
+            .loader-spinner {
+                width: 60px;
+                height: 60px;
+                border-width: 6px;
+            }
+            .loader-text {
+                font-size: 1rem;
+            }
+            .loader-subtext {
+                font-size: 0.75rem;
+            }
+            .ai-loader {
+                padding: 40px 20px;
+                min-height: 300px;
+            }
+            .ai-loader-spinner {
+                width: 60px;
+                height: 60px;
+                border-width: 6px;
+            }
+            .ai-loader-spinner::before {
+                width: 35px;
+                height: 35px;
+                border-width: 3px;
+            }
+            .ai-loader-text {
+                font-size: 1rem;
+                letter-spacing: 1px;
+            }
+            .ai-loader-subtext {
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
 <body>
+
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-box">
+            <div class="loader-spinner"></div>
+            <div class="loader-text" id="loaderText">LOADING...</div>
+            <div class="loader-subtext" id="loaderSubtext">Initializing system</div>
+        </div>
+    </div>
 
     <!-- Toast Notification -->
     <div class="toast" id="toast">
@@ -453,7 +720,7 @@
         <span id="toastMessage">Success!</span>
     </div>
 
-    <div class="overlay" id="overlay"></div>
+    <div class="overlay" id="overlay" onclick="closeAIEditor()"></div>
 
     <div class="container">
         <!-- Header -->
@@ -564,14 +831,20 @@
         <!-- AI Editor Window (Hidden by default) -->
         <div class="ai-editor" id="aiEditor">
             <div class="ai-editor-header">
-                <span><i class="fas fa-terminal"></i> GEMINI_AI_PROCESSOR</span>
-                <button onclick="closeAIEditor()" style="background:none; color:white; border:none; cursor:pointer;"><i class="fas fa-times"></i></button>
+                <span><i class="fas fa-robot"></i> AI ANALYSIS</span>
+                <button onclick="closeAIEditor()"><i class="fas fa-times"></i></button>
             </div>
             <div class="ai-editor-content" id="aiContent">
-                // System Initializing...
+                <div class="ai-loader" id="aiLoader">
+                    <div class="ai-loader-spinner"></div>
+                    <div class="ai-loader-text" id="aiLoaderText">ANALYZING...</div>
+                    <div class="ai-loader-subtext" id="aiLoaderSubtext">Connecting to AI</div>
+                </div>
+                <div id="aiResult" style="display: none;"></div>
             </div>
-            <div style="padding: 10px; background: #333; text-align: right;">
-                <button class="copy-btn" onclick="copyAIResult()">Copy Analysis</button>
+            <div class="ai-editor-footer">
+                <button onclick="downloadAIResult()"><i class="fas fa-download"></i> Download</button>
+                <button onclick="copyAIResult()"><i class="fas fa-copy"></i> Copy</button>
             </div>
         </div>
         
@@ -629,52 +902,145 @@
             }, 3000);
         }
 
+        // Page Loader with Dynamic Text
+        const loaderTexts = [
+            { main: 'LOADING...', sub: 'Initializing system' },
+            { main: 'FETCHING DATA...', sub: 'Reading repository' },
+            { main: 'PARSING FILES...', sub: 'Analyzing structure' },
+            { main: 'RENDERING...', sub: 'Building interface' },
+            { main: 'ALMOST THERE...', sub: 'Final touches' }
+        ];
+        
+        let loaderIndex = 0;
+        const loaderInterval = setInterval(() => {
+            loaderIndex = (loaderIndex + 1) % loaderTexts.length;
+            const loaderText = document.getElementById('loaderText');
+            const loaderSubtext = document.getElementById('loaderSubtext');
+            if (loaderText) loaderText.textContent = loaderTexts[loaderIndex].main;
+            if (loaderSubtext) loaderSubtext.textContent = loaderTexts[loaderIndex].sub;
+        }, 600);
+        
+        function hidePageLoader() {
+            const pageLoader = document.getElementById('pageLoader');
+            if (!pageLoader) return;
+            clearInterval(loaderInterval);
+            pageLoader.classList.add('hidden');
+            setTimeout(() => {
+                if (pageLoader.parentNode) {
+                    pageLoader.remove();
+                }
+            }, 500);
+        }
+        
+        window.addEventListener('load', hidePageLoader);
+        setTimeout(hidePageLoader, 5000);
+
         // GSAP Entrance Animations
         window.addEventListener('DOMContentLoaded', () => {
-            gsap.from(".header", { y: -50, opacity: 0, duration: 0.8, ease: "power3.out" });
-            gsap.from("#readmeSection", { x: -100, opacity: 0, duration: 1, delay: 0.2, ease: "back.out(1.2)" });
-            gsap.from("#structureSection", { x: 100, opacity: 0, duration: 1, delay: 0.4, ease: "back.out(1.2)" });
-            gsap.from("#footerAction", { y: 50, opacity: 0, duration: 0.8, delay: 0.6 });
+            gsap.from(".header", { y: -50, opacity: 0, duration: 0.8, ease: "power3.out", clearProps: "all" });
+            gsap.from("#readmeSection", { x: -100, opacity: 0, duration: 1, delay: 0.2, ease: "back.out(1.2)", clearProps: "all" });
+            gsap.from("#structureSection", { x: 100, opacity: 0, duration: 1, delay: 0.4, ease: "back.out(1.2)", clearProps: "all" });
+            gsap.from("#footerAction", { y: 50, opacity: 0, duration: 0.8, delay: 0.6, clearProps: "all" });
         });
 
         async function generateAIReadme() {
             const btn = document.getElementById('aiBtn');
             const editor = document.getElementById('aiEditor');
             const overlay = document.getElementById('overlay');
-            const content = document.getElementById('aiContent');
+            const aiLoader = document.getElementById('aiLoader');
+            const aiResult = document.getElementById('aiResult');
             
+            // Disable button with visual feedback
             btn.disabled = true;
             btn.classList.add('loading');
+            btn.style.opacity = '0.6';
+            btn.style.cursor = 'not-allowed';
             
             // Show Modal with Animation
-            overlay.style.display = 'block';
+            overlay.classList.add('active');
             editor.classList.add('active');
             gsap.to(editor, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.7)" });
-            content.textContent = '// AI is analyzing the repository structure...\n// Connecting to the AI Model...';
+            
+            // Show loader, hide result
+            aiLoader.style.display = 'block';
+            aiResult.style.display = 'none';
+            aiResult.innerHTML = '';
+            document.getElementById('aiContent').classList.add('loading');
+            
+            // Dynamic loader text
+            const aiTexts = [
+                { main: 'ANALYZING...', sub: 'Scanning code files' },
+                { main: 'PROCESSING...', sub: 'Reading repository structure' },
+                { main: 'THINKING...', sub: 'Generating insights with AI' },
+                { main: 'WRITING...', sub: 'Creating README content' }
+            ];
+            
+            let aiIndex = 0;
+            const aiInterval = setInterval(() => {
+                aiIndex = (aiIndex + 1) % aiTexts.length;
+                document.getElementById('aiLoaderText').textContent = aiTexts[aiIndex].main;
+                document.getElementById('aiLoaderSubtext').textContent = aiTexts[aiIndex].sub;
+            }, 700);
             
             try {
                 const response = await fetch('/generate-ai-readme/{{ share_id }}');
                 const data = await response.json();
                 
+                clearInterval(aiInterval);
+                aiLoader.style.display = 'none';
+                aiResult.style.display = 'block';
+                document.getElementById('aiContent').classList.remove('loading');
+                
                 if (data.success) {
-                    content.innerHTML = data.readme;
+                    // Simulate streaming effect for better UX
+                    const fullText = data.readme;
+                    let currentIndex = 0;
+                    const chunkSize = 50; // Characters per chunk
+                    
+                    const streamInterval = setInterval(() => {
+                        if (currentIndex < fullText.length) {
+                            currentIndex += chunkSize;
+                            aiResult.innerHTML = fullText.substring(0, currentIndex);
+                            aiResult.scrollTop = aiResult.scrollHeight;
+                        } else {
+                            clearInterval(streamInterval);
+                            aiResult.innerHTML = fullText;
+                        }
+                    }, 20); // Fast streaming for instant feel
+                    
                 } else {
-                    content.textContent = '// ERROR: Access Denied. ' + (data.error || 'Failed to fetch.');
+                    aiResult.innerHTML = '<div style="color: var(--pink); font-weight: bold; padding: 20px; text-align: center;">⚠ ERROR: ' + (data.error || 'Failed to fetch.') + '</div>';
                 }
             } catch (error) {
-                content.textContent = '// ERROR: Connection Refused. ' + error.message;
+                clearInterval(aiInterval);
+                aiLoader.style.display = 'none';
+                aiResult.style.display = 'block';
+                document.getElementById('aiContent').classList.remove('loading');
+                aiResult.innerHTML = '<div style="color: var(--pink); font-weight: bold; padding: 20px; text-align: center;">⚠ ERROR: Connection Failed - ' + error.message + '</div>';
             } finally {
                 btn.disabled = false;
                 btn.classList.remove('loading');
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
             }
         }
         
         function closeAIEditor() {
             const editor = document.getElementById('aiEditor');
             const overlay = document.getElementById('overlay');
+            const btn = document.getElementById('aiBtn');
+            
+            // Re-enable button when closing
+            if (btn) {
+                btn.disabled = false;
+                btn.classList.remove('loading');
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+            }
+            
             gsap.to(editor, { opacity: 0, scale: 0.9, duration: 0.3, onComplete: () => {
                 editor.classList.remove('active');
-                overlay.style.display = 'none';
+                overlay.classList.remove('active');
             }});
         }
         
@@ -691,12 +1057,28 @@
         }
 
         function copyAIResult() {
-            const content = document.getElementById('aiContent').innerText;
+            const aiResult = document.getElementById('aiResult');
+            const content = aiResult.innerText || aiResult.textContent;
             navigator.clipboard.writeText(content).then(() => {
                 showToast('AI Analysis copied to clipboard!', 'success');
             }).catch(() => {
                 showToast('Failed to copy', 'error');
             });
+        }
+        
+        function downloadAIResult() {
+            const aiResult = document.getElementById('aiResult');
+            const content = aiResult.innerText || aiResult.textContent;
+            const blob = new Blob([content], { type: 'text/markdown' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'README.md';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            showToast('README.md downloaded!', 'success');
         }
     </script>
 </body>
