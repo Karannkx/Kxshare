@@ -31,7 +31,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* No scroll on laptop */
+            overflow-y: auto;
         }
 
         .marquee-top {
@@ -60,135 +60,180 @@
             flex-grow: 1;
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 20px;
+            align-items: flex-start;
+            padding: 40px 20px;
             position: relative;
+            min-height: 100vh;
         }
 
         /* --- DASHBOARD CONTAINER --- */
         .container {
-            max-width: 1100px;
+            max-width: 1000px;
             width: 100%;
-            background: var(--card-bg);
-            border: 4px solid var(--border);
-            box-shadow: var(--shadow);
-            padding: 30px;
+            background: transparent;
+            padding: 0;
             position: relative;
             z-index: 10;
+            margin-bottom: 40px;
+            max-height: none;
         }
 
         /* --- HEADER --- */
         .header {
+            background: var(--card-bg);
+            border: 4px solid var(--border);
+            box-shadow: var(--shadow);
+            padding: 20px 25px;
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 4px solid var(--border);
-            padding-bottom: 15px;
-            margin-bottom: 25px;
         }
 
         .header h1 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             text-transform: uppercase;
             background: var(--secondary);
-            padding: 5px 15px;
+            padding: 5px 12px;
             border: 3px solid var(--border);
-            box-shadow: 4px 4px 0px var(--border);
+            box-shadow: 3px 3px 0px var(--border);
         }
 
         .status-badge {
             font-family: 'Space Mono';
             font-weight: bold;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--pink);
             text-transform: uppercase;
         }
 
-        /* --- CONTENT GRID (Compact 3 Columns) --- */
+        /* --- BENTO GRID LAYOUT --- */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: 1.5fr 1fr 0.8fr;
-            gap: 20px;
-            align-items: start;
+            grid-template-columns: repeat(12, 1fr);
+            grid-auto-rows: minmax(80px, auto);
+            gap: 15px;
         }
 
         .box {
-            background: #fff;
+            background: var(--card-bg);
             border: 3px solid var(--border);
-            padding: 15px;
+            padding: 20px;
             box-shadow: 4px 4px 0px var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Bento Grid Areas */
+        .link-box {
+            grid-column: span 8;
+            grid-row: span 2;
+        }
+
+        .qr-box {
+            grid-column: span 4;
+            grid-row: span 2;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .expiry-box {
+            grid-column: span 4;
+            grid-row: span 1;
+            background: var(--pink);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .actions-box {
+            grid-column: span 8;
+            grid-row: span 1;
+            padding: 0;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            display: flex;
+            gap: 15px;
+        }
+
+        .share-box {
+            grid-column: span 12;
+            background: var(--primary);
         }
 
         .label {
             display: block;
             font-weight: 700;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
-            margin-bottom: 10px;
-            color: rgba(0,0,0,0.6);
+            margin-bottom: 12px;
+            color: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .link-input {
             width: 100%;
-            padding: 12px;
+            padding: 12px 15px;
             border: 2px solid var(--border);
             font-family: 'Space Mono', monospace;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             background: #f8f8f8;
             outline: none;
-            margin-bottom: 15px;
-        }
-
-        .qr-box {
-            text-align: center;
-            background: white;
+            margin-bottom: 12px;
+            flex-grow: 1;
         }
 
         .qr-box img {
-            max-width: 100%;
+            max-width: 180px;
+            width: 100%;
             height: auto;
-            border: 2px solid var(--border);
-        }
-
-        /* --- EXPIRY & ACTION AREA --- */
-        .expiry-area {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+            border: 3px solid var(--border);
+            box-shadow: 3px 3px 0px var(--border);
         }
 
         .expiry-tag {
-            background: var(--pink);
-            color: white;
-            padding: 10px;
-            border: 3px solid var(--border);
             font-family: 'Space Mono';
-            font-size: 0.8rem;
+            font-size: 0.9rem;
+            font-weight: 700;
             text-align: center;
+            color: white;
+        }
+
+        .expiry-label {
+            font-size: 0.7rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+            text-transform: uppercase;
         }
 
         .btn {
-            width: 100%;
-            padding: 12px;
+            flex: 1;
+            padding: 15px 20px;
             border: 3px solid var(--border);
             font-weight: 700;
             text-transform: uppercase;
             cursor: pointer;
-            box-shadow: 3px 3px 0px var(--border);
-            transition: 0.1s;
+            box-shadow: 4px 4px 0px var(--border);
+            transition: 0.15s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            font-size: 0.85rem;
+            gap: 8px;
+            font-size: 0.8rem;
             text-decoration: none;
-            color: #000;
+            color: var(--border);
+            font-family: 'Space Grotesk', sans-serif;
         }
 
-        .btn:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0px var(--border); }
+        .btn:hover { 
+            transform: translate(-2px, -2px); 
+            box-shadow: 6px 6px 0px var(--border);
+        }
         .btn-copy { background: var(--primary); }
         .btn-open { background: var(--green); }
-        .btn-home { background: var(--bg); }
+        .btn-home { background: var(--secondary); }
 
         /* --- SIDE DECO --- */
         .side-deco {
@@ -204,14 +249,155 @@
         /* --- RESPONSIVE --- */
         @media (max-width: 900px) {
             .dashboard-grid { grid-template-columns: 1fr; }
-            body { overflow-y: auto; }
             .container { padding: 20px; }
             .header { flex-direction: column; gap: 10px; }
+            .page-wrapper { padding: 20px 15px; }
         }
 
         @media (max-width: 480px) {
             .header h1 { font-size: 1.4rem; }
             .container { padding: 15px; }
+        }
+
+        /* --- TOAST NOTIFICATION --- */
+        .toast {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: var(--green);
+            border: 4px solid var(--border);
+            padding: 18px 25px;
+            box-shadow: 8px 8px 0px var(--border);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            opacity: 0;
+            transform: translateX(400px);
+        }
+        .toast i { font-size: 1.3rem; }
+        .toast.success { background: var(--green); }
+        .toast.error { background: var(--pink); }
+
+        /* --- SHARE BUTTONS --- */
+        .share-title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(0,0,0,0.6);
+        }
+        .share-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        .share-btn {
+            padding: 12px 15px;
+            border: 3px solid var(--border);
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px var(--border);
+            transition: 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            text-decoration: none;
+            color: var(--border);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .share-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0px var(--border);
+        }
+        .share-whatsapp { background: #25D366; color: #fff; }
+        .share-telegram { background: #0088cc; color: #fff; }
+        .share-twitter { background: #1DA1F2; color: #fff; }
+        .share-email { background: #fff; }
+
+        .footer-info {
+            background: var(--card-bg);
+            border: 3px solid var(--border);
+            box-shadow: 4px 4px 0px var(--border);
+            padding: 15px 20px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-info .creator {
+            font-family: 'Space Mono';
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-links a {
+            color: var(--border);
+            font-size: 1.1rem;
+            transition: 0.2s;
+        }
+
+        .social-links a:hover {
+            color: var(--pink);
+            transform: scale(1.2);
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                grid-auto-rows: auto;
+            }
+            
+            .link-box,
+            .qr-box,
+            .expiry-box,
+            .actions-box,
+            .share-box {
+                grid-column: span 1;
+                grid-row: span 1;
+            }
+            
+            .actions-box {
+                flex-direction: column;
+            }
+            
+            .qr-box img {
+                max-width: 150px;
+            }
+            
+            .share-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .toast { right: 15px; top: 15px; padding: 15px 20px; }
+            
+            .header h1 { font-size: 1.3rem; }
+            .header { padding: 15px; }
+            
+            .share-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-info {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -234,45 +420,75 @@
             </header>
 
             <div class="dashboard-grid">
-                <!-- BOX 1: THE LINK -->
-                <div class="box">
+                <!-- Link Box - Large -->
+                <div class="box link-box">
                     <span class="label"><i class="fas fa-link"></i> Access Link</span>
                     <input type="text" value="{{ share_link }}" id="shareLink" class="link-input" readonly>
                     <button class="btn btn-copy" onclick="copyLink()" id="copyBtn">
-                        <i class="fas fa-copy"></i> Copy to Clipboard
+                        <i class="fas fa-copy"></i> Copy Link
                     </button>
                 </div>
 
-                <!-- BOX 2: EXPIRY & ACTIONS -->
-                <div class="expiry-area">
-                    <div class="box">
-                        <span class="label"><i class="fas fa-clock"></i> Auto-Delete In</span>
-                        <div class="expiry-tag">{{ expiry_date }}</div>
-                    </div>
-                    <a href="{{ share_link }}" target="_blank" class="btn btn-open">
-                        <i class="fas fa-external-link-alt"></i> Preview Tab
-                    </a>
-                    <a href="/" class="btn btn-home">
-                        <i class="fas fa-plus-circle"></i> Create New
-                    </a>
-                </div>
-
-                <!-- BOX 3: QR CODE -->
+                <!-- QR Code Box -->
                 <div class="box qr-box">
                     <span class="label">Quick Scan</span>
                     <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code">
                 </div>
+
+                <!-- Expiry Box -->
+                <div class="box expiry-box">
+                    <div class="expiry-label"><i class="fas fa-clock"></i> Auto-Delete</div>
+                    <div class="expiry-tag">{{ expiry_date }}</div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="actions-box">
+                    <a href="{{ share_link }}" target="_blank" class="btn btn-open">
+                        <i class="fas fa-external-link-alt"></i> Preview
+                    </a>
+                    <a href="/" class="btn btn-home">
+                        <i class="fas fa-plus-circle"></i> New Link
+                    </a>
+                </div>
+
+                <!-- Share Section -->
+                <div class="box share-box">
+                    <div class="share-title">
+                        <i class="fas fa-share-alt"></i> Share This Link
+                    </div>
+                    <div class="share-buttons">
+                        <a href="#" onclick="shareWhatsApp(); return false;" class="share-btn share-whatsapp">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </a>
+                        <a href="#" onclick="shareTelegram(); return false;" class="share-btn share-telegram">
+                            <i class="fab fa-telegram"></i> Telegram
+                        </a>
+                        <a href="#" onclick="shareTwitter(); return false;" class="share-btn share-twitter">
+                            <i class="fab fa-twitter"></i> Twitter
+                        </a>
+                        <a href="#" onclick="shareEmail(); return false;" class="share-btn share-email">
+                            <i class="fas fa-envelope"></i> Email
+                        </a>
+                    </div>
+                </div>
             </div>
 
-            <div style="margin-top: 25px; display: flex; justify-content: space-between; align-items: center; border-top: 3px dashed #000; padding-top: 15px;">
-                <div style="font-family: 'Space Mono'; font-size: 0.7rem; font-weight: bold;">BY <span>KARANNKX</span></div>
-                <div style="display: flex; gap: 15px;">
-                    <a href="https://github.com/Karannkx" style="color:#000;"><i class="fab fa-github"></i></a>
-                    <a href="https://instagram.com/Karannkx" style="color:#000;"><i class="fab fa-instagram"></i></a>
-                    <a href="https://linkedin.com/in/Karannkx" style="color:#000;"><i class="fab fa-linkedin"></i></a>
+            <!-- Footer -->
+            <div class="footer-info">
+                <div class="creator">BY <span style="background: var(--pink); color: white; padding: 2px 8px; border: 2px solid #000;">KARANNKX</span></div>
+                <div class="social-links">
+                    <a href="https://github.com/Karannkx" target="_blank"><i class="fab fa-github"></i></a>
+                    <a href="https://instagram.com/Karannkx" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://linkedin.com/in/Karannkx" target="_blank"><i class="fab fa-linkedin"></i></a>
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Success!</span>
     </div>
 
     <script>
@@ -280,22 +496,103 @@
         window.addEventListener('load', () => {
             const tl = gsap.timeline();
             tl.from("#mainCard", { duration: 0.6, y: 40, opacity: 0, ease: "power2.out" })
-              .from(".box", { duration: 0.4, scale: 0.95, opacity: 0, stagger: 0.1, ease: "back.out(1.7)" }, "-=0.3");
+              .from(".box", { duration: 0.4, scale: 0.95, opacity: 0, stagger: 0.1, ease: "back.out(1.7)" }, "-=0.3")
+              .from(".share-section", { duration: 0.5, y: 30, opacity: 0, ease: "power2.out" }, "-=0.2");
+            
+            // Save to recent links
+            saveRecentLink();
         });
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            const icon = toast.querySelector('i');
+            
+            toast.className = 'toast ' + type;
+            toastMessage.textContent = message;
+            
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+            } else {
+                icon.className = 'fas fa-exclamation-circle';
+            }
+            
+            gsap.to(toast, {
+                opacity: 1,
+                x: 0,
+                duration: 0.5,
+                ease: "back.out(1.7)"
+            });
+            
+            setTimeout(() => {
+                gsap.to(toast, {
+                    opacity: 0,
+                    x: 400,
+                    duration: 0.4,
+                    ease: "power2.in"
+                });
+            }, 3000);
+        }
 
         function copyLink() {
             const input = document.getElementById('shareLink');
             const btn = document.getElementById('copyBtn');
             input.select();
-            document.execCommand('copy');
+            
+            navigator.clipboard.writeText(input.value).then(() => {
+                showToast('Link copied to clipboard!', 'success');
+                btn.innerHTML = '<i class="fas fa-check"></i> COPIED!';
+                btn.style.background = '#a8e6cf';
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-copy"></i> Copy to Clipboard';
+                    btn.style.background = '#ffd93d';
+                }, 2000);
+            }).catch(() => {
+                // Fallback for older browsers
+                document.execCommand('copy');
+                showToast('Link copied!', 'success');
+            });
+        }
 
-            // Button Feedback
-            btn.innerHTML = '<i class="fas fa-check"></i> COPIED!';
-            btn.style.background = '#a8e6cf';
-            setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-copy"></i> Copy to Clipboard';
-                btn.style.background = '#ffd93d';
-            }, 2000);
+        function saveRecentLink() {
+            const link = {
+                url: '{{ share_link }}',
+                repo: '{{ owner }}/{{ repo }}',
+                id: '{{ share_id }}',
+                date: new Date().toISOString(),
+                expiry: '{{ expiry_date }}'
+            };
+            
+            let recent = JSON.parse(localStorage.getItem('kxshare_recent_links') || '[]');
+            recent = recent.filter(l => l.id !== link.id);
+            recent.unshift(link);
+            recent = recent.slice(0, 5);
+            localStorage.setItem('kxshare_recent_links', JSON.stringify(recent));
+        }
+
+        function shareWhatsApp() {
+            const text = `Check out this repository: {{ owner }}/{{ repo }}\n{{ share_link }}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+            showToast('Opening WhatsApp...', 'success');
+        }
+
+        function shareTelegram() {
+            const text = `Check out this repository: {{ owner }}/{{ repo }}`;
+            window.open(`https://t.me/share/url?url=${encodeURIComponent('{{ share_link }}')}&text=${encodeURIComponent(text)}`, '_blank');
+            showToast('Opening Telegram...', 'success');
+        }
+
+        function shareTwitter() {
+            const text = `Check out {{ owner }}/{{ repo }} on KxShare`;
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent('{{ share_link }}')}`, '_blank');
+            showToast('Opening Twitter...', 'success');
+        }
+
+        function shareEmail() {
+            const subject = `Check out ${encodeURIComponent('{{ owner }}/{{ repo }}')} on KxShare`;
+            const body = `I wanted to share this repository with you:\n\n{{ owner }}/{{ repo }}\n\nAccess Link: {{ share_link }}\n\nShared via KxShare`;
+            window.location.href = `mailto:?subject=${subject}&body=${encodeURIComponent(body)}`;
+            showToast('Opening email client...', 'success');
         }
     </script>
 </body>

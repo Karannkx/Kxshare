@@ -173,44 +173,114 @@
 
         /* --- EMPTY STATE --- */
         .empty-state {
+            padding: 40px 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .empty-header {
+            width: 100%;
+            max-width: 550px;
+            background: var(--pink);
+            border: 4px solid var(--border);
+            padding: 25px 30px;
+            margin-bottom: 20px;
+            box-shadow: 6px 6px 0px var(--border);
+            position: relative;
             text-align: center;
-            padding: 60px 30px;
         }
-        .empty-state i {
-            font-size: 5rem;
-            color: var(--pink);
-            margin-bottom: 25px;
-            display: block;
+        
+        .empty-header i {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2.5rem;
+            color: var(--border);
+            opacity: 0.3;
         }
-        .empty-state h2 {
+        
+        .empty-header h2 {
             font-size: 1.8rem;
+            text-transform: uppercase;
+            color: var(--border);
+            margin: 0;
+            letter-spacing: -1px;
+        }
+        
+        .empty-body {
+            width: 100%;
+            max-width: 550px;
+            background: var(--primary);
+            border: 3px solid var(--border);
+            padding: 20px 25px;
+            margin-bottom: 20px;
+            box-shadow: 5px 5px 0px var(--border);
+            text-align: center;
+        }
+        
+        .empty-body p {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0;
+            color: var(--border);
+        }
+        
+        .error-reasons {
+            width: 100%;
+            max-width: 550px;
+            background: #fff;
+            border: 3px solid var(--border);
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 5px 5px 0px var(--border);
+        }
+        
+        .error-reasons h4 {
+            font-size: 0.85rem;
             text-transform: uppercase;
             margin-bottom: 15px;
             color: var(--border);
+            font-weight: bold;
+            letter-spacing: 0.5px;
         }
-        .empty-state p {
+        
+        .reason-grid {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .reason-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            position: relative;
+        }
+        
+        .reason-item i {
+            font-size: 1.3rem;
+            color: var(--secondary);
+            flex-shrink: 0;
+        }
+        
+        .reason-item p {
             font-family: 'Space Mono', monospace;
-            font-size: 1rem;
-            line-height: 1.8;
-            margin-bottom: 25px;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            margin: 0;
+            color: var(--border);
+            flex: 1;
         }
-        .error-box {
-            background: var(--pink);
-            border: 3px solid var(--border);
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 450px;
-            box-shadow: 6px 6px 0px var(--border);
-        }
-        .error-box strong {
+        
+        .reason-item strong {
             display: block;
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            text-transform: uppercase;
+            margin-bottom: 2px;
         }
+        
         .back-home-btn {
             display: inline-flex;
             align-items: center;
@@ -225,10 +295,13 @@
             box-shadow: 6px 6px 0px var(--pink);
             transition: 0.2s;
             font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
         }
+        
         .back-home-btn:hover {
             transform: translate(-3px, -3px);
             box-shadow: 9px 9px 0px var(--pink);
+            background: #333;
         }
 
         /* --- DOWNLOAD AREA --- */
@@ -310,17 +383,75 @@
             }
             .copy-btn { width: 100%; padding: 10px; }
             
-            .empty-state { padding: 40px 20px; }
-            .empty-state i { font-size: 3.5rem; margin-bottom: 20px; }
-            .empty-state h2 { font-size: 1.3rem; }
-            .empty-state p { font-size: 0.85rem; }
-            .error-box { padding: 15px; margin: 15px; max-width: 90%; }
-            .error-box strong { font-size: 0.95rem; }
-            .back-home-btn { padding: 12px 20px; font-size: 0.9rem; }
+            .empty-state { padding: 25px 15px; }
+            .empty-header { 
+                padding: 20px 50px 20px 20px; 
+                max-width: 100%;
+            }
+            .empty-header i { 
+                font-size: 2rem; 
+                top: 12px; 
+                right: 15px;
+            }
+            .empty-header h2 { font-size: 1.3rem; }
+            .empty-body { 
+                padding: 15px 18px; 
+                max-width: 100%;
+            }
+            .empty-body p { font-size: 0.85rem; }
+            .error-reasons { 
+                padding: 15px; 
+                max-width: 100%;
+            }
+            .error-reasons h4 { font-size: 0.8rem; }
+            .reason-item { 
+                padding: 10px 12px; 
+                gap: 10px;
+            }
+            .reason-item i { font-size: 1.1rem; }
+            .reason-item p { font-size: 0.75rem; }
+            .back-home-btn { 
+                padding: 12px 20px; 
+                font-size: 0.85rem;
+                width: 100%;
+                max-width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* --- TOAST NOTIFICATION --- */
+        .toast {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: var(--green);
+            border: 4px solid var(--border);
+            padding: 18px 25px;
+            box-shadow: 8px 8px 0px var(--border);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            opacity: 0;
+            transform: translateX(400px);
+        }
+        .toast i { font-size: 1.3rem; }
+        .toast.success { background: var(--green); }
+        .toast.error { background: var(--pink); }
+
+        @media (max-width: 600px) {
+            .toast { right: 15px; top: 15px; padding: 15px 20px; font-size: 0.9rem; }
         }
     </style>
 </head>
 <body>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Success!</span>
+    </div>
 
     <div class="overlay" id="overlay"></div>
 
@@ -352,16 +483,33 @@
                     </div>
                     {% else %}
                     <div class="empty-state">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <h2>Repository Not Found!</h2>
-                        <p>The repository appears to be empty or inaccessible. This could mean:</p>
-                        <div class="error-box">
-                            <strong><i class="fas fa-shield-alt"></i> Authentication Failed</strong>
-                            <p style="margin: 0; font-size: 0.85rem;">Your GitHub token might be invalid, expired, or doesn't have access to this repository.</p>
+                        <div class="empty-header">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h2>Repository Not Found!</h2>
+                        </div>
+                        <div class="empty-body">
+                            <p>The repository appears to be empty or inaccessible.</p>
+                        </div>
+                        <div class="error-reasons">
+                            <h4>POSSIBLE CAUSES:</h4>
+                            <div class="reason-grid">
+                                <div class="reason-item">
+                                    <i class="fas fa-key"></i>
+                                    <p><strong>Invalid Token</strong><br>GitHub token expired or incorrect</p>
+                                </div>
+                                <div class="reason-item">
+                                    <i class="fas fa-lock"></i>
+                                    <p><strong>No Access</strong><br>Token lacks repo permissions</p>
+                                </div>
+                                <div class="reason-item">
+                                    <i class="fas fa-link-slash"></i>
+                                    <p><strong>Wrong URL</strong><br>Repository URL is incorrect</p>
+                                </div>
+                            </div>
                         </div>
                         <a href="/" class="back-home-btn">
-                            <i class="fas fa-home"></i>
-                            Enter Correct Details
+                            <i class="fas fa-arrow-left"></i>
+                            Go Back & Fix Details
                         </a>
                     </div>
                     {% endif %}
@@ -400,9 +548,13 @@
                     </div>
                     {% else %}
                     <div class="empty-state">
-                        <i class="fas fa-folder-open"></i>
-                        <h2>No Files Found</h2>
-                        <p style="font-size: 0.9rem; margin-top: 15px;">Check your GitHub token and repository URL at the home page.</p>
+                        <div class="empty-header">
+                            <i class="fas fa-folder-open"></i>
+                            <h2>No Files Found</h2>
+                        </div>
+                        <div class="empty-body">
+                            <p>This repository appears to be completely empty.</p>
+                        </div>
                     </div>
                     {% endif %}
                 </div>
@@ -443,8 +595,40 @@
         </div>
         {% endif %}
     </div>
-    
+
     <script>
+        // Toast Notification Function
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            const icon = toast.querySelector('i');
+            
+            toast.className = 'toast ' + type;
+            toastMessage.textContent = message;
+            
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+            } else {
+                icon.className = 'fas fa-exclamation-circle';
+            }
+            
+            gsap.to(toast, {
+                opacity: 1,
+                x: 0,
+                duration: 0.5,
+                ease: "back.out(1.7)"
+            });
+            
+            setTimeout(() => {
+                gsap.to(toast, {
+                    opacity: 0,
+                    x: 400,
+                    duration: 0.4,
+                    ease: "power2.in"
+                });
+            }, 3000);
+        }
+
         // GSAP Entrance Animations
         window.addEventListener('DOMContentLoaded', () => {
             gsap.from(".header", { y: -50, opacity: 0, duration: 0.8, ease: "power3.out" });
@@ -498,14 +682,21 @@
             const code = document.getElementById('wgetCmd').textContent;
             const btn = document.getElementById('copyBtn');
             navigator.clipboard.writeText(code).then(() => {
-                btn.innerHTML = 'DONE!';
+                showToast('Command copied to clipboard!', 'success');
+                btn.innerHTML = '<i class="fas fa-check"></i> DONE!';
                 setTimeout(() => btn.innerHTML = 'COPY', 2000);
+            }).catch(() => {
+                showToast('Failed to copy', 'error');
             });
         }
 
         function copyAIResult() {
             const content = document.getElementById('aiContent').innerText;
-            navigator.clipboard.writeText(content).then(() => alert('AI Analysis Copied!'));
+            navigator.clipboard.writeText(content).then(() => {
+                showToast('AI Analysis copied to clipboard!', 'success');
+            }).catch(() => {
+                showToast('Failed to copy', 'error');
+            });
         }
     </script>
 </body>
