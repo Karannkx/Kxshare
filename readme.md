@@ -16,12 +16,15 @@
 - Optional **password protection** for shared links
 - **Auto-expiry** with automatic cleanup
 - Encrypted storage of repository credentials
+- Token validation with GitHub prefix check (ghp_)
 
 ### 📦 Sharing Made Easy
 - **Unique shareable links** with custom expiry (1-365 days)
 - **QR code generation** for instant mobile access
 - **One-click ZIP download** of entire repositories
 - **File browser** with syntax highlighting
+- **Social sharing** buttons (WhatsApp, Telegram, Twitter, Email)
+- **Recent links** tracking with localStorage
 - Mobile-responsive neo-brutalist UI
 
 ### 🤖 AI-Powered Features
@@ -29,12 +32,15 @@
 - Automatic code analysis and documentation
 - Smart dependency detection
 - Technology stack identification
+- Conditional AI button (only shows when files exist)
 
 ### 🎨 Modern UI/UX
 - Neo-brutalist design with GSAP animations
 - Responsive 3-column form layout (laptop optimized)
+- **Toast notifications** for better user feedback
 - Floating stickers and interactive elements
 - Privacy popup with smooth animations
+- Empty state handling with helpful error messages
 - Dark mode ready
 
 ### 🔗 Developer Friendly
@@ -43,6 +49,7 @@
 - Docker containerization
 - MongoDB for scalable data storage
 - SEO optimized (robots.txt, sitemap.xml)
+- Comprehensive error handling
 
 ---
 
