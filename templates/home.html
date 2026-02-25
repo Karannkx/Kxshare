@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>KxShare Control Center - Secure Repository Sharing</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -264,6 +264,181 @@
         .btn-small { padding: 8px 12px; border: 2px solid #000; font-size: 0.7rem; font-weight: bold; cursor: pointer; text-transform: uppercase; background: #fff; text-decoration: none; color: #000; }
         .btn-small.accept { background: var(--border); color: #fff; }
 
+        /* --- TOKEN ERROR MESSAGE --- */
+        .token-error {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: #fff;
+            border: 5px solid var(--border);
+            max-width: 550px;
+            width: 90%;
+            box-shadow: 20px 20px 0px var(--border);
+            z-index: 10001;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .token-error.active {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+        
+        .error-header {
+            background: var(--pink);
+            padding: 25px 30px;
+            border-bottom: 5px solid var(--border);
+            text-align: center;
+        }
+        
+        .error-header i {
+            font-size: 4.5rem;
+            color: var(--border);
+            display: block;
+            margin-bottom: 15px;
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px) rotate(-5deg); }
+            75% { transform: translateX(10px) rotate(5deg); }
+        }
+        
+        .error-header h3 {
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            color: var(--border);
+            margin: 0;
+            letter-spacing: -1px;
+        }
+        
+        .error-body {
+            padding: 35px 30px;
+            background: #fff;
+        }
+        
+        .error-message {
+            background: var(--primary);
+            border: 3px solid var(--border);
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 6px 6px 0px var(--border);
+        }
+        
+        .error-message p {
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            line-height: 1.7;
+            margin: 0;
+            color: var(--border);
+        }
+        
+        .error-message code {
+            background: var(--border);
+            color: var(--primary);
+            padding: 4px 10px;
+            font-weight: bold;
+            border: 2px solid var(--border);
+            display: inline-block;
+            margin: 0 3px;
+        }
+        
+        .error-hint {
+            background: var(--bg);
+            border: 3px solid var(--border);
+            padding: 18px;
+            margin-bottom: 25px;
+            box-shadow: 4px 4px 0px var(--border);
+        }
+        
+        .error-hint strong {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            color: var(--border);
+        }
+        
+        .error-hint strong i {
+            color: var(--secondary);
+            font-size: 1.2rem;
+        }
+        
+        .error-hint p {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 0;
+            color: var(--border);
+        }
+        
+        .error-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .close-error-btn {
+            flex: 1;
+            background: var(--border);
+            color: #fff;
+            border: 3px solid var(--border);
+            padding: 15px 25px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.3);
+            transition: 0.15s;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+        }
+        
+        .close-error-btn:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.3);
+            background: #333;
+        }
+        
+        .get-token-btn {
+            flex: 1;
+            background: var(--secondary);
+            color: var(--border);
+            border: 3px solid var(--border);
+            padding: 15px 25px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.3);
+            transition: 0.15s;
+            font-family: 'Space Grotesk', sans-serif;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .get-token-btn:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.3);
+            background: #fff;
+        }
+        
+        .error-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 10000;
+            display: none;
+            backdrop-filter: blur(6px);
+        }
+        .error-overlay.active {
+            display: block;
+        }
+
         /* --- TOKEN GUIDE MODAL --- */
         .modal-overlay {
             display: none;
@@ -288,6 +463,8 @@
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
+            transform: scale(1);
+            opacity: 1;
         }
         
         .modal-header {
@@ -410,15 +587,51 @@
             .double-width, .submit-btn, .full-width { grid-column: span 1; }
             .header { flex-direction: column; text-align: center; gap: 15px; }
             .sticker { display: none !important; }
-            .modal-box { max-width: 95%; max-height: 95vh; }
+            .modal-box { 
+                max-width: 95%; 
+                max-height: 85vh; 
+                box-shadow: 8px 8px 0px var(--border);
+            }
             .modal-body { padding: 20px 15px; }
-            .guide-step { padding: 18px; }
-            .guide-step p { margin-left: 0; margin-top: 12px; }
-            .modal-header h2 { font-size: 1.2rem; }
+            .guide-step { padding: 15px; margin: 15px 0; }
+            .guide-step p { 
+                margin-left: 0; 
+                margin-top: 12px; 
+                font-size: 0.85rem;
+            }
+            .modal-header { padding: 18px 15px; }
+            .modal-header h2 { font-size: 1.1rem; }
+            .step-num { 
+                width: 35px; 
+                height: 35px; 
+                font-size: 1.1rem;
+                margin-right: 10px;
+            }
+            .guide-step h3 { font-size: 1.1rem; }
+            .close-btn { padding: 8px 15px; font-size: 0.9rem; }
             .submit-btn { padding: 15px; font-size: 0.9rem; gap: 8px; }
             .privacy-popup { width: 85%; max-width: 280px; padding: 15px; bottom: 10px; left: 10px; }
             .privacy-popup h4 { font-size: 0.85rem; }
             .privacy-popup p { font-size: 0.65rem; }
+            
+            .token-error { 
+                max-width: 95%; 
+                box-shadow: 12px 12px 0px var(--border);
+            }
+            .error-header { padding: 20px; }
+            .error-header i { font-size: 3rem; margin-bottom: 10px; }
+            .error-header h3 { font-size: 1.3rem; }
+            .error-body { padding: 20px; }
+            .error-message { padding: 15px; margin-bottom: 20px; }
+            .error-message p { font-size: 0.9rem; }
+            .error-hint { padding: 15px; margin-bottom: 20px; }
+            .error-hint strong { font-size: 0.85rem; }
+            .error-hint p { font-size: 0.8rem; }
+            .error-actions { flex-direction: column; gap: 10px; }
+            .close-error-btn, .get-token-btn { 
+                padding: 12px 20px; 
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
@@ -501,6 +714,34 @@
         </main>
     </div>
 
+    <!-- Token Error Overlay -->
+    <div class="error-overlay" id="errorOverlay"></div>
+    
+    <!-- Token Error Message -->
+    <div class="token-error" id="tokenError">
+        <div class="error-header">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Invalid Token!</h3>
+        </div>
+        <div class="error-body">
+            <div class="error-message">
+                <p><strong>GitHub Personal Access Tokens must start with <code>ghp_</code></strong></p>
+            </div>
+            <div class="error-hint">
+                <strong><i class="fas fa-lightbulb"></i> What's wrong?</strong>
+                <p>The token you entered doesn't match GitHub's format. Valid tokens always begin with "ghp_" followed by alphanumeric characters.</p>
+            </div>
+            <div class="error-actions">
+                <button onclick="closeTokenError()" class="close-error-btn">
+                    <i class="fas fa-check"></i> GOT IT!
+                </button>
+                <button onclick="closeTokenError(); openTokenGuide();" class="get-token-btn">
+                    <i class="fas fa-terminal"></i> GET TOKEN
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- PRIVACY POPUP -->
     <div class="privacy-popup" id="privacyPopup">
         <h4><i class="fas fa-shield-alt"></i> Privacy Guard</h4>
@@ -578,6 +819,53 @@
     </div>
 
     <script>
+        // Form Validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const tokenInput = document.querySelector('input[name="token"]');
+            const tokenValue = tokenInput.value.trim();
+            
+            // Check if token is provided and doesn't start with ghp_
+            if (tokenValue && !tokenValue.startsWith('ghp_')) {
+                e.preventDefault();
+                showTokenError();
+                return false;
+            }
+        });
+        
+        function showTokenError() {
+            const errorOverlay = document.getElementById('errorOverlay');
+            const errorBox = document.getElementById('tokenError');
+            
+            errorOverlay.classList.add('active');
+            
+            gsap.to(errorBox, {
+                scale: 1,
+                opacity: 1,
+                duration: 0.5,
+                ease: "elastic.out(1, 0.75)",
+                onStart: () => errorBox.classList.add('active')
+            });
+        }
+        
+        function closeTokenError() {
+            const errorOverlay = document.getElementById('errorOverlay');
+            const errorBox = document.getElementById('tokenError');
+            
+            gsap.to(errorBox, {
+                scale: 0,
+                opacity: 0,
+                duration: 0.3,
+                ease: "power2.in",
+                onComplete: () => {
+                    errorBox.classList.remove('active');
+                    errorOverlay.classList.remove('active');
+                }
+            });
+        }
+        
+        // Close on overlay click
+        document.getElementById('errorOverlay').addEventListener('click', closeTokenError);
+        
         document.addEventListener('DOMContentLoaded', () => {
             const tl = gsap.timeline();
 
@@ -628,23 +916,40 @@
         
         // Token Guide Modal
         function openTokenGuide() {
-            document.getElementById('tokenModal').classList.add('active');
-            gsap.from('.modal-box', {
-                scale: 0.8,
-                opacity: 0,
-                duration: 0.4,
-                ease: "back.out(1.7)"
-            });
+            const modal = document.getElementById('tokenModal');
+            const modalBox = modal.querySelector('.modal-box');
+            
+            modal.classList.add('active');
+            
+            // Reset and animate from initial state
+            gsap.fromTo(modalBox, 
+                {
+                    scale: 0.8,
+                    opacity: 0
+                },
+                {
+                    scale: 1,
+                    opacity: 1,
+                    duration: 0.4,
+                    ease: "back.out(1.7)"
+                }
+            );
         }
         
         function closeTokenGuide() {
             const modal = document.getElementById('tokenModal');
-            gsap.to('.modal-box', {
+            const modalBox = modal.querySelector('.modal-box');
+            
+            gsap.to(modalBox, {
                 scale: 0.8,
                 opacity: 0,
                 duration: 0.3,
                 ease: "power2.in",
-                onComplete: () => modal.classList.remove('active')
+                onComplete: () => {
+                    modal.classList.remove('active');
+                    // Reset to initial state for next opening
+                    gsap.set(modalBox, { scale: 1, opacity: 1 });
+                }
             });
         }
         

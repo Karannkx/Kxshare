@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <title>{{ owner }}/{{ repo }} - KxShare Viewer</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- GSAP for Animations -->
@@ -171,6 +171,66 @@
         }
         .file-name { flex: 1; font-family: 'Space Mono', monospace; font-weight: bold; overflow: hidden; text-overflow: ellipsis; }
 
+        /* --- EMPTY STATE --- */
+        .empty-state {
+            text-align: center;
+            padding: 60px 30px;
+        }
+        .empty-state i {
+            font-size: 5rem;
+            color: var(--pink);
+            margin-bottom: 25px;
+            display: block;
+        }
+        .empty-state h2 {
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            color: var(--border);
+        }
+        .empty-state p {
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .error-box {
+            background: var(--pink);
+            border: 3px solid var(--border);
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 450px;
+            box-shadow: 6px 6px 0px var(--border);
+        }
+        .error-box strong {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .back-home-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--border);
+            color: #fff;
+            padding: 15px 30px;
+            border: 3px solid var(--border);
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            box-shadow: 6px 6px 0px var(--pink);
+            transition: 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .back-home-btn:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 9px 9px 0px var(--pink);
+        }
+
         /* --- DOWNLOAD AREA --- */
         .footer-action {
             background: var(--green);
@@ -209,8 +269,14 @@
             justify-content: space-between;
             align-items: center;
             border: 1px solid #444;
+            gap: 10px;
         }
-        .copy-btn { background: var(--secondary); border: 2px solid var(--border); padding: 5px 15px; cursor: pointer; font-weight: bold; }
+        .wget-command code {
+            overflow-x: auto;
+            word-break: break-all;
+            flex: 1;
+        }
+        .copy-btn { background: var(--secondary); border: 2px solid var(--border); padding: 5px 15px; cursor: pointer; font-weight: bold; white-space: nowrap; }
 
         /* Overlay for AI Editor */
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 999; display: none; backdrop-filter: blur(4px); }
@@ -227,6 +293,30 @@
             .header-actions { width: 100%; }
             .ai-btn { width: 100%; justify-content: center; }
             h1 { font-size: 1.1rem; }
+            
+            .footer-action { padding: 15px; }
+            .download-grid { gap: 15px; }
+            .download-btn { padding: 15px; font-size: 0.9rem; }
+            
+            .wget-command {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .wget-command code {
+                font-size: 0.7rem;
+                word-break: break-all;
+                overflow-wrap: break-word;
+            }
+            .copy-btn { width: 100%; padding: 10px; }
+            
+            .empty-state { padding: 40px 20px; }
+            .empty-state i { font-size: 3.5rem; margin-bottom: 20px; }
+            .empty-state h2 { font-size: 1.3rem; }
+            .empty-state p { font-size: 0.85rem; }
+            .error-box { padding: 15px; margin: 15px; max-width: 90%; }
+            .error-box strong { font-size: 0.95rem; }
+            .back-home-btn { padding: 12px 20px; font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -240,7 +330,7 @@
             <h1><i class="fab fa-github"></i> {{ owner }}/{{ repo }}</h1>
             
             <div class="header-actions">
-                {% if has_gemini %}
+                {% if has_gemini and files and files|length > 0 %}
                 <button onclick="generateAIReadme()" class="ai-btn" id="aiBtn">
                     <i class="fas fa-robot"></i>
                     <i class="fas fa-spinner spinner"></i>
@@ -256,9 +346,25 @@
             <div class="section" id="readmeSection">
                 <div class="section-title"><i class="fas fa-book"></i> README.md</div>
                 <div class="scroll-area">
+                    {% if files and files|length > 0 %}
                     <div class="readme-content">
                         {{ readme_content | safe }}
                     </div>
+                    {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h2>Repository Not Found!</h2>
+                        <p>The repository appears to be empty or inaccessible. This could mean:</p>
+                        <div class="error-box">
+                            <strong><i class="fas fa-shield-alt"></i> Authentication Failed</strong>
+                            <p style="margin: 0; font-size: 0.85rem;">Your GitHub token might be invalid, expired, or doesn't have access to this repository.</p>
+                        </div>
+                        <a href="/" class="back-home-btn">
+                            <i class="fas fa-home"></i>
+                            Enter Correct Details
+                        </a>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
 
@@ -266,6 +372,7 @@
             <div class="section" id="structureSection">
                 <div class="section-title"><i class="fas fa-folder-tree"></i> REPO_STRUCTURE</div>
                 <div class="scroll-area">
+                    {% if files and files|length > 0 %}
                     <div class="file-tree">
                         {% macro render_files(files) %}
                         <ul>
@@ -291,6 +398,13 @@
                         {% endmacro %}
                         {{ render_files(files) }}
                     </div>
+                    {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-folder-open"></i>
+                        <h2>No Files Found</h2>
+                        <p style="font-size: 0.9rem; margin-top: 15px;">Check your GitHub token and repository URL at the home page.</p>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -310,6 +424,7 @@
         </div>
         
         <!-- Footer Actions -->
+        {% if files and files|length > 0 %}
         <div class="footer-action" id="footerAction">
             <div class="download-grid">
                 <a href="{{ url_for('download_repo', share_id=share_id) }}" class="download-btn">
@@ -326,6 +441,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
     </div>
     
     <script>
