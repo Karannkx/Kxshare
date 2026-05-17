@@ -1,6 +1,6 @@
 # ⚡ KXShare — AI-Powered Secure GitHub Repository Sharer
 
-> **Share private GitHub repositorys securely with encrypted tokens, password protection, QR codes, and AI-powered README generation using Gemini AI.**
+> **Share private GitHub repositories securely with encrypted tokens, password protection, QR codes, and AI-powered README generation using Gemini AI.**
 
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 [![MongoDB](https://img.shields.io/badge/Database-MongoDB-green?style=for-the-badge&logo=mongodb)](https://www.mongodb.com/)
